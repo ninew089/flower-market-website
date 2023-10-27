@@ -1,14 +1,15 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
+import bcrypt from "bcryptjs";
 import {
   getServerSession,
-  type DefaultSession,
   type NextAuthOptions,
+  type DefaultSession,
 } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-
+import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "@/env.mjs";
 import { db } from "@/server/db";
+import { type Role } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -18,17 +19,31 @@ import { db } from "@/server/db";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: DefaultSession["user"] & {
+    user: {
       id: string;
       // ...other properties
       // role: UserRole;
-    };
+    } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    role: Role;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    role: Role;
+  }
+}
+
+function isUpdateSessionData(
+  session: unknown,
+): session is Record<"name" | "email" | "image", string | undefined> {
+  if (!session) return false;
+  if (typeof session !== "object") return false;
+
+  return true;
 }
 
 /**
@@ -37,31 +52,78 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  session: {
+    strategy: "jwt",
+   // maxAge: 15 * 24 * 60 * 60,
+  },
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt({ token, user, session, trigger }) {
+      
+      //check triger update session ของ fe
+      if (trigger === "update" && isUpdateSessionData(session)) {
+        //set ค่า  ที่ setup payload ใหม่
+        if (session.image) token.picture = session.image;
+        if (session.name) token.name = session.name;
+        if (session.email) token.email = session.email;
+      }
+
+      if (user) {
+        token.sub = user.id;
+        token.email = user.email;
+        token.role = user.role;
+        token.name = user.name;
+        token.picture = user.image;
+      }
+      console.log(token)
+      return token;
+    },
+    session: ({ session, token }) => {
+      console.log("SESSION");
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.sub,
+          role: token.role,
+          name: token.name,
+          email: token.email,
+          image: token.picture,
+        },
+      };
+    },
   },
   adapter: PrismaAdapter(db),
+  secret: process.env.AUTH_SECRET,
   providers: [
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    CredentialsProvider({
+      name: "Credentials",
+     
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+
+      async authorize(credentials) {
+        
+        const user = await db.user.findUnique({
+          where: {
+            email: credentials?.email,
+          },
+        });
+  
+
+        if (!user) return null;
+        if (!credentials?.password) return null;
+        if (!(await bcrypt.compare(credentials.password, user.password))) {
+          return null;
+        }
+        // console.log({ ...user, id: user.id.toString() })
+        return { ...user, id: user.id.toString() };
+      },
     }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
+
+
 };
 
 /**

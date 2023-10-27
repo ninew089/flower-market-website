@@ -1,12 +1,18 @@
 import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
+import colors from "tailwindcss/colors";
 
 export default {
-  content: ["./src/**/*.tsx"],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+      colors: {
+        primary: colors.blue,
+        secondary: colors.sky,
+        success: colors.green,
+        danger: colors.red,
+        info: colors.cyan,
+        warn: colors.yellow,
+        default: colors.gray,
       },
     },
   },
