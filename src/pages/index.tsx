@@ -3,9 +3,45 @@ import Head from "next/head";
 import Link from "next/link";
 
 import { api } from "@/utils/api";
+import { useState } from "react";
 
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
+
+  const [currentId, setCurrentId] = useState(-1);
+
+  const { data: articles, isLoading } = api.article.list.useQuery();
+  const { mutateAsync: addArticle } = api.article.add.useMutation();
+  const { mutateAsync: updateArticle } = api.article.update.useMutation();
+  const { mutateAsync: removeArticle } = api.article.remove.useMutation();
+
+  const dateString = new Date().toISOString();
+
+  const add = () => {
+    void addArticle({
+      title: `My Title: ${dateString}`,
+      excerpt: `My Excerpt: ${dateString}`,
+      content: `My Content: ${dateString}`,
+    });
+    return;
+  };
+
+  const update = (id: number) => {
+    void updateArticle({
+      id,
+      data: {
+        title: `Update Title: ${dateString}`,
+        excerpt: `Update Excerpt: ${dateString}`,
+        content: `Update Content: ${dateString}`,
+      },
+    });
+  };
+
+  const remove = (id: number) => {
+    void removeArticle(id);
+  };
+
+  console.log(articles);
 
   return (
     <>
@@ -47,6 +83,19 @@ export default function Home() {
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
+            <ul>
+              {articles?.map((article) => (
+                <li key={article.id} className="flex">
+                  <button onClick={() => setCurrentId(article.id)}>
+                    Show Details
+                  </button>
+                  <button onClick={() => update(article.id)}>Edit</button>
+                  <button onClick={() => remove(article.id)}>Delete</button>
+                  {article.title}
+                </li>
+              ))}
+            </ul>
+
             <AuthShowcase />
           </div>
         </div>
@@ -60,7 +109,7 @@ function AuthShowcase() {
 
   const { data: secretMessage } = api.post.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined }
+    { enabled: sessionData?.user !== undefined },
   );
 
   return (
