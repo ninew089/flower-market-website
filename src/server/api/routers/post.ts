@@ -60,6 +60,10 @@ export const articleRouter = createTRPCRouter({
   list: publicProcedure.query(() => {
     return articles;
   }),
+  byId: publicProcedure.input(z.number()).query(({ input }) => {
+    const article = articles.find((article) => article.id === input);
+    return article;
+  }),
   add: publicProcedure
     .input(
       z.object({ title: z.string(), excerpt: z.string(), content: z.string() }),

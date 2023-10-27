@@ -8,12 +8,29 @@ import { useState } from "react";
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
 
+  const utils = api.useContext();
+  const list = utils.article.list;
+
   const [currentId, setCurrentId] = useState(-1);
 
   const { data: articles, isLoading } = api.article.list.useQuery();
-  const { mutateAsync: addArticle } = api.article.add.useMutation();
-  const { mutateAsync: updateArticle } = api.article.update.useMutation();
-  const { mutateAsync: removeArticle } = api.article.remove.useMutation();
+  const { data: article, isLoading: isLoadingByID } =
+    api.article.byId.useQuery(currentId);
+  const { mutateAsync: addArticle } = api.article.add.useMutation({
+    onSuccess() {
+      void list.invalidate();
+    },
+  });
+  const { mutateAsync: updateArticle } = api.article.update.useMutation({
+    onSuccess() {
+      void list.invalidate();
+    },
+  });
+  const { mutateAsync: removeArticle } = api.article.remove.useMutation({
+    onSuccess() {
+      void list.invalidate();
+    },
+  });
 
   const dateString = new Date().toISOString();
 
@@ -79,10 +96,11 @@ export default function Home() {
               </div>
             </Link>
           </div>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 text-white">
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
+            <button onClick={add}>Add</button>
             <ul>
               {articles?.map((article) => (
                 <li key={article.id} className="flex">
