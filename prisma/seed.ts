@@ -114,6 +114,30 @@ async function main() {
       create: createArticleInput,
     });
   }
+
+    // Create Item
+    const numOfItems = 100;
+
+    for (let i = 0; i < numOfItems; i++) {
+      const title = faker.lorem.sentence();
+      const createItmesInput: Prisma.ItemCreateInput = {
+        title,
+        slug: slugify(title),
+        excerpt: faker.lorem.paragraph(),
+        content: faker.lorem.paragraphs({ min: 3, max: 10 }),
+        image: faker.image.url(),
+        price:+faker.commerce.price({min:30,max:1000}),
+        user: { connect: { id: faker.helpers.arrayElement(userIds) } },
+      };
+  
+      await db.item.upsert({
+        where: {
+          slug: createItmesInput.slug,
+        },
+        update: {},
+        create: createItmesInput,
+      });
+    }
 }
 
 main()
