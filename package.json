@@ -31,6 +31,7 @@
     "bcryptjs": "^2.4.3",
     "crypto-js": "^4.2.0",
     "formidable": "^3.5.1",
+    "fuse.js": "^7.0.0",
     "immer": "^10.0.3",
     "lodash": "^4.17.21",
     "next": "^13.5.4",
