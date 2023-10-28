@@ -21,6 +21,8 @@ const CartList = () => {
     if (cartItem.length > 0) {
       await mutateAsync(cartItem);
       clearAll();
+      //setUiToast
+      router.push(`/market`);
     }
   };
 

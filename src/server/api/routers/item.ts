@@ -203,7 +203,7 @@ export const itemRouter = createTRPCRouter({
         where: { id: input },
       });
     }),
-  buy: protectedProcedure
+  buy: publicProcedure
     .input(z.array(z.object({ id: z.number(), total: z.number() })))
     .mutation(async ({ input, ctx }) => {
       for (let i = 0; i < input.length; i++) {
