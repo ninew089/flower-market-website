@@ -4,7 +4,7 @@ import * as z from 'zod';
 import { TRPCError } from '@trpc/server';
 
 export const leaveRouter = createTRPCRouter({
-  list: protectedProcedure.query(async ({ ctx }) => {
+  list: protectedProcedure.meta({roles:['ADMIN','MANAGER']}).query(async ({ ctx }) => {
     const leaves = await ctx.db.leave.findMany({
       where: {
         userId: +ctx.session.user.id,
@@ -29,7 +29,7 @@ export const leaveRouter = createTRPCRouter({
 
     return leaves;
   }),
-  byId: protectedProcedure.input(z.number()).query(async ({ input, ctx }) => {
+  byId: protectedProcedure.meta({roles:['ADMIN','MANAGER']}).input(z.number()).query(async ({ input, ctx }) => {
     const leave = await ctx.db.leave.findUnique({
       where: { id: input },
       select: {

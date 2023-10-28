@@ -1,15 +1,14 @@
-import { type GetServerSidePropsContext } from "next";
-import bcrypt from "bcryptjs";
+import { type GetServerSidePropsContext } from 'next';
+import bcrypt from 'bcryptjs';
 import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
-} from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { env } from "@/env.mjs";
-import { db } from "@/server/db";
-import { type Role } from "@prisma/client";
+} from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { db } from '@/server/db';
+import { type Role } from '@prisma/client';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -17,13 +16,12 @@ import { type Role } from "@prisma/client";
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+      role: Role;
+    } & DefaultSession['user'];
   }
 
   interface User {
@@ -31,7 +29,7 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
+declare module 'next-auth/jwt' {
   interface JWT {
     role: Role;
   }
@@ -39,9 +37,9 @@ declare module "next-auth/jwt" {
 
 function isUpdateSessionData(
   session: unknown,
-): session is Record<"name" | "email" | "image", string | undefined> {
+): session is Record<'name' | 'email' | 'image', string | undefined> {
   if (!session) return false;
-  if (typeof session !== "object") return false;
+  if (typeof session !== 'object') return false;
 
   return true;
 }
@@ -53,15 +51,11 @@ function isUpdateSessionData(
  */
 export const authOptions: NextAuthOptions = {
   session: {
-    strategy: "jwt",
-   // maxAge: 15 * 24 * 60 * 60,
+    strategy: 'jwt',
   },
   callbacks: {
     jwt({ token, user, session, trigger }) {
-      
-      //check triger update session ของ fe
-      if (trigger === "update" && isUpdateSessionData(session)) {
-        //set ค่า  ที่ setup payload ใหม่
+      if (trigger === 'update' && isUpdateSessionData(session)) {
         if (session.image) token.picture = session.image;
         if (session.name) token.name = session.name;
         if (session.email) token.email = session.email;
@@ -74,11 +68,10 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.picture = user.image;
       }
-      console.log(token)
+
       return token;
     },
     session: ({ session, token }) => {
-      console.log("SESSION");
       return {
         ...session,
         user: {
@@ -93,37 +86,30 @@ export const authOptions: NextAuthOptions = {
     },
   },
   adapter: PrismaAdapter(db),
-  secret: process.env.AUTH_SECRET,
   providers: [
     CredentialsProvider({
-      name: "Credentials",
-     
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
-
       async authorize(credentials) {
-        
         const user = await db.user.findUnique({
           where: {
             email: credentials?.email,
           },
         });
-  
 
         if (!user) return null;
         if (!credentials?.password) return null;
         if (!(await bcrypt.compare(credentials.password, user.password))) {
           return null;
         }
-        // console.log({ ...user, id: user.id.toString() })
+
         return { ...user, id: user.id.toString() };
       },
     }),
   ],
-
-
 };
 
 /**
@@ -132,8 +118,8 @@ export const authOptions: NextAuthOptions = {
  * @see https://next-auth.js.org/configuration/nextjs
  */
 export const getServerAuthSession = (ctx: {
-  req: GetServerSidePropsContext["req"];
-  res: GetServerSidePropsContext["res"];
+  req: GetServerSidePropsContext['req'];
+  res: GetServerSidePropsContext['res'];
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };

@@ -39,6 +39,7 @@ model User {
     leaves        Leave[]
     articles      Article[]
     announcements Announcement[]
+    items         Item[]
 }
 
 model Leave {
@@ -73,6 +74,20 @@ model Article {
     slug      String   @unique
     excerpt   String
     content   String
+    image     String
+    userId    Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id])
+}
+
+model Item {
+    id        Int      @id @default(autoincrement())
+    title     String
+    slug      String   @unique
+    excerpt   String
+    content   String
+    price     Int
     image     String
     userId    Int
     createdAt DateTime @default(now())

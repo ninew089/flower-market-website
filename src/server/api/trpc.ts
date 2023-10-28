@@ -15,7 +15,11 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
+import { Role } from "@prisma/client";
 
+type Meta ={
+  roles:Role[]
+}
 /**
  * 1. CONTEXT
  *
@@ -70,7 +74,8 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * errors on the backend.
  */
 
-const t = initTRPC.context<typeof createTRPCContext>().create({
+//add meta data for check user role
+const t = initTRPC.context<typeof createTRPCContext>().meta<Meta>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
@@ -108,10 +113,15 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session?.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+const isAuthorized = t.middleware(({ ctx, meta, next }) => {
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
+
+  if (meta?.roles && !meta.roles.includes(ctx.session.user.role)) {
+    throw new TRPCError({ code: 'FORBIDDEN' });
+  }
+
   return next({
     ctx: {
       // infers the `session` as non-nullable
@@ -119,6 +129,7 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
     },
   });
 });
+
 
 /**
  * Protected (authenticated) procedure
@@ -128,4 +139,4 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const protectedProcedure = t.procedure.use(isAuthorized);

@@ -1,7 +1,7 @@
-import Image from "next/image";
-import { type ChangeEventHandler, useState } from "react";
-import { ACCEPTED_IMAGE_TYPES } from "../helpers/validators";
-import Loading from "./Loading";
+import Image from 'next/image';
+import { type ChangeEventHandler, useState } from 'react';
+import { ACCEPTED_IMAGE_TYPES } from '../helpers/validators';
+import Loading from './Loading';
 
 export interface AvatarUploaderProps {
   defaultImage?: string;
@@ -16,15 +16,15 @@ const AvatarUploader = ({
 }: AvatarUploaderProps) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [image, setImage] = useState(
-    defaultImage ?? "/assets/images/avatar.png",
+    defaultImage ?? '/assets/images/avatar.png',
   );
 
   const uploadImage = async (image: File) => {
     const formData = new FormData();
-    formData.append("file", image);
+    formData.append('file', image);
 
-    const res = await fetch("/api/upload", {
-      method: "POST",
+    const res = await fetch('/api/upload', {
+      method: 'POST',
       body: formData,
     });
     const data = (await res.json()) as { filename: string };
@@ -71,7 +71,7 @@ const AvatarUploader = ({
           </span>
           <input
             type="file"
-            accept={ACCEPTED_IMAGE_TYPES.join(", ")}
+            accept={ACCEPTED_IMAGE_TYPES.join(', ')}
             className="hidden"
             onChange={handleImageUpload}
           ></input>

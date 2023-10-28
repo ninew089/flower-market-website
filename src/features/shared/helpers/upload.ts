@@ -1,5 +1,8 @@
-import * as z from "zod";
+import * as z from 'zod';
 
+//overload type return
+export function getImagePath(file: string): string;
+export function getImagePath(file?: null): undefined;
 export function getImagePath(file?: string | null) {
   if (!file) return;
 
