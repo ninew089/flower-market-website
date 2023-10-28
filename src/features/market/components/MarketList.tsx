@@ -12,11 +12,29 @@ const MarketList = () => {
     isError,
   } = api.item.list.useQuery(deferredQuery);
 
+  const { data: recommendItems, isLoading: isLoadRecommendItems } =
+    api.item.recommendList.useQuery();
+
   if (isError) return <div>Not found.</div>;
 
   return (
     <div className="mx-auto max-w-7xl px-5">
-      <div className="flex justify-between items-center">
+      <p className="text-xl pl-5 font-medium mb-10">Recommend For You</p>
+      {isLoadRecommendItems ? (
+        <Loading></Loading>
+      ) : (
+        <div className="flex flex-row snap-x scroll-smooth md:scroll-auto overflow-x-auto gap-x-6">
+          {recommendItems?.map((item, index) => (
+            <MarketItem
+              key={item.id}
+              {...item}
+              className="min-w-[calc(100vw-40px)] md:min-w-[320px]"
+            ></MarketItem>
+          ))}
+        </div>
+      )}
+
+      <div className="flex  flex-col lg:flex-row justify-between items-center mt-10">
         <p className="text-xl pl-5 font-medium mb-10"> Market Place</p>
         <input
           onChange={(e) => setSearch(e.target.value)}

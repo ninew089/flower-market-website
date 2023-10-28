@@ -58,6 +58,8 @@ const FlowerUploader = ({
           alt="Flower Upload"
           width={240}
           height={240}
+          sizes="100vw"
+          objectFit="cover"
           onLoadingComplete={() => setIsButtonDisabled(false)}
           className="mx-auto w-[240px] h-[240px] rounded-xl object-cover object-center border-[2px] border-pink-600 p-[1px]"
         ></Image>
@@ -67,7 +69,7 @@ const FlowerUploader = ({
       ) : (
         <label className="mt-6 cursor-pointer">
           <span className="mt-2 rounded-md bg-pink-500 px-4 py-2 text-sm leading-normal text-white">
-          Upload your flower
+            Upload your flower
           </span>
           <input
             type="file"

@@ -44,6 +44,28 @@ export const itemRouter = createTRPCRouter({
 
       return searchResults;
     }),
+  recommendList: publicProcedure.query(async ({ input, ctx }) => {
+    const items = await ctx.db.item.findMany({
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        image: true,
+        price: true,
+      },
+      orderBy: {
+        sold: 'desc',
+      },
+      take: 4,
+    });
+
+    const decryptedItems = items.map((item) => ({
+      ...item,
+      image: aesDecrypt(item.image),
+    }));
+
+    return decryptedItems;
+  }),
   byUserId: protectedProcedure
     .input(z.number())
     .query(async ({ input, ctx }) => {

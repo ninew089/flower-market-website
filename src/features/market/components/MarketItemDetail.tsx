@@ -46,11 +46,11 @@ const MarketItemDetail = () => {
         priority
         src={item.image}
         alt={item.title}
-        width="0"
-        height="0"
+        width={320}
+        height={320}
         sizes="100vw"
         objectFit="cover"
-        className="mx-auto rounded-md object-cover object-center w-full h-[320px]"
+        className="mx-auto rounded-md"
       />
       <div className="text-right mt-1"> sold {item.sold} items</div>
       <p className="mt-4 text-lg font-medium line-clamp-2  text-pink-500">

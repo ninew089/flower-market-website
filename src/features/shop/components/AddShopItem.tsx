@@ -36,6 +36,7 @@ const AddShopItem = () => {
 
   return (
     <div className="mx-auto max-w-lg">
+      <p className="text-xl pl-5 font-medium mb-10">Add Your Flower</p>
       <form onSubmit={handleSubmit(updateProfile)}>
         <div className="center mx-auto py-3">
           <FlowerUploader

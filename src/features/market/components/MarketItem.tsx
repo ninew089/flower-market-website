@@ -2,8 +2,13 @@ import Link from 'next/link';
 import { Item } from '../types';
 import Image from 'next/image';
 import { PencilIcon } from '@heroicons/react/24/solid';
+import { twMerge } from 'tailwind-merge';
 
-export type MarketItemProps = Item & { edit?: boolean; userId?: string };
+export type MarketItemProps = Item & {
+  edit?: boolean;
+  userId?: string;
+  className?: string;
+};
 
 const MarketItem = ({
   id,
@@ -13,11 +18,15 @@ const MarketItem = ({
   price,
   edit,
   userId,
+  className,
 }: MarketItemProps) => {
   return (
     <Link
       href={`/market/${slug}`}
-      className="relative px-4 pt-4 pb-5 flex flex-col w-full shadow-md rounded-xl shadow-black/5"
+      className={twMerge(
+        'relative px-4 pt-4 pb-5 flex flex-col w-full shadow-md rounded-xl shadow-black/5',
+        className,
+      )}
     >
       {edit && userId && (
         <Link
@@ -32,11 +41,11 @@ const MarketItem = ({
         priority
         src={image}
         alt={title}
-        width="0"
-        height="0"
+        width={240}
+        height={240}
         sizes="100vw"
         objectFit="cover"
-        className="mx-auto rounded-md object-cover object-center w-full h-[240px]"
+        className="mx-auto rounded-md"
       />
       <p className="mt-4 text-base font-medium line-clamp-2 ">{title}</p>
       <p className="text-right mt-auto font-medium">฿{price}</p>
