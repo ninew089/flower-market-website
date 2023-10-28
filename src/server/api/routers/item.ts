@@ -8,29 +8,42 @@ import {
 } from '@/server/api/trpc';
 import { shopItems } from '@/features/shop/helpers/validators';
 import { aesDecrypt, aesEncrypt } from '@/utils/encrypt';
+import Fuse from 'fuse.js';
 
 export const itemRouter = createTRPCRouter({
-  list: publicProcedure.query(async ({ ctx }) => {
-    const items = await ctx.db.item.findMany({
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        image: true,
-        price: true,
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    });
+  list: publicProcedure
+    .input(z.string().optional())
+    .query(async ({ input, ctx }) => {
+      const searchQuery = input || '';
+      const items = await ctx.db.item.findMany({
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          image: true,
+          price: true,
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      });
 
-    const decryptedItems = items.map((item) => ({
-      ...item,
-      image: aesDecrypt(item.image),
-    }));
+      const decryptedItems = items.map((item) => ({
+        ...item,
+        image: aesDecrypt(item.image),
+      }));
+      const fuse = new Fuse(decryptedItems, {
+        keys: ['title', 'slug', 'id'],
+        threshold: 0.3,
+      });
 
-    return decryptedItems;
-  }),
+      // Perform the search
+      const searchResults = searchQuery
+        ? fuse.search(searchQuery).map((x) => x.item)
+        : decryptedItems; // If no query is provided, return all items
+
+      return searchResults;
+    }),
   byUserId: protectedProcedure
     .input(z.number())
     .query(async ({ input, ctx }) => {
