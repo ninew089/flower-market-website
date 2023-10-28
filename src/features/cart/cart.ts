@@ -12,8 +12,9 @@ export interface CartSlice {
   items: CartItem[];
   addItem: (item: CartItem) => void;
   removeItem: (itemId: number, quantity: number) => void;
-  clearCart: () => void;
-  getTotal: () => void;
+  clearCart: (id: number) => void;
+  getTotal: () => number;
+  clearAll: () => void;
 }
 
 export const createCartSlice: AppSliceCreator<CartSlice> = (set, get) => {
@@ -22,29 +23,45 @@ export const createCartSlice: AppSliceCreator<CartSlice> = (set, get) => {
 
     addItem: (item: CartItem) => {
       set((state) => {
-        const existingItem = state.items.find((i) => i.id === item.id);
-        if (existingItem) {
-          existingItem.quantity += item.quantity;
+        const prev = [...state.items];
+        const existingItem = prev.find((x) => x.id === item.id);
+        const itemList = prev.filter((x) => x.id !== item.id);
+        const existing = { ...existingItem } as CartItem;
+        if (existing.quantity) {
+          console.log('add old');
+          existing.quantity += item.quantity;
+          state.items = [...itemList, existing].sort((a, b) => a.id - b.id);
         } else {
-          state.items.push(item);
+          console.log('add new');
+          state.items = [...state.items, item].sort((a, b) => a.id - b.id);
         }
       });
     },
 
     removeItem: (itemId: number, quantity: number) => {
       set((state) => {
-        const existingItem = state.items.find((item) => item.id === itemId);
-        if (existingItem) {
-          if (quantity >= existingItem.quantity) {
-            state.items = state.items.filter((item) => item.id !== itemId);
-          } else {
-            existingItem.quantity -= quantity;
-          }
+        const prev = [...state.items];
+        const existingItem = prev.find((x) => x.id === itemId);
+        const itemList = prev.filter((x) => x.id !== itemId);
+        const existing = { ...existingItem } as CartItem;
+        if (existing.quantity) {
+          console.log('add old');
+          existing.quantity -= quantity;
+          state.items = [...itemList, existing].sort((a, b) => a.id - b.id);
+        }
+        if (existing.quantity === 1) {
+          state.items = itemList;
         }
       });
     },
 
-    clearCart: () => {
+    clearCart: (id: number) => {
+      set((state) => {
+        const existingItem = state.items.filter((x) => x.id !== id);
+        state.items = existingItem;
+      });
+    },
+    clearAll: () => {
       set((state) => {
         state.items = [];
       });

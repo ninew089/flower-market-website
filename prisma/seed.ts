@@ -79,7 +79,6 @@ main()
     await db.$disconnect();
   })
   .catch(async (e) => {
-    console.log(e);
     await db.$disconnect();
     process.exit(1);
   });

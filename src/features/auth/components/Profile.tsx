@@ -9,14 +9,13 @@ import FormField from '@/features/ui/components/form/FormField';
 import Button from '@/features/ui/components/Button';
 import { useEffect } from 'react';
 import { api } from '@/utils/api';
-import { useAppStore } from '@/features/store';
 import { useRouter } from 'next/router';
 import { aesDecrypt, aesEncrypt } from '@/utils/encrypt';
 
 const Profile = () => {
   const router = useRouter();
   const { data: session, update: updateSession } = useSession();
-  const setUiToast = useAppStore((state) => state.setUiToast);
+
   const { mutateAsync: update } = api.auth.update.useMutation();
   const {
     handleSubmit,
@@ -38,10 +37,10 @@ const Profile = () => {
       tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
     });
 
-    setUiToast({
-      type: 'Success',
-      message: 'Your profile has already updated.',
-    });
+    // setUiToast({
+    //   type: 'Success',
+    //   message: 'Your profile has already updated.',
+    // });
 
     router.push('/market');
   };

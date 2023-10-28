@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { api } from '@/utils/api';
 import Loading from '@/features/ui/components/Loading';
 import Button from '@/features/ui/components/Button';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppStore } from '@/features/store';
 
 export type MarketItemProps = Item;
@@ -40,9 +40,7 @@ const MarketItemDetail = () => {
       <div className="text-right mt-1"> sold {item.sold} items</div>
       <p className="mt-4 text-base font-medium line-clamp-2 ">{item.title}</p>
       <p className="text-sm font-medium line-clamp-2 ">{item.content}</p>
-      <p className="text-right mt-auto font-medium mb-10">
-        post by {item.name}
-      </p>
+      <p className="text-right font-medium mb-10 mt-2">post by {item.name}</p>
       <p className="text-right mt-auto font-medium mb-10">฿{item.price}</p>
 
       <Button
@@ -54,7 +52,7 @@ const MarketItemDetail = () => {
             name: item.title,
             price: item.price,
             image: item.image,
-            quantity: 0,
+            quantity: 1,
           })
         }
       >

@@ -14,15 +14,15 @@ export interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const route = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const cartItem = useAppStore((state) => state.items);
+
   return (
     <>
       <Navbar>
         <Navbar.Navbrand></Navbar.Navbrand>
         <Navbar.NavItem to="/market">Market Places</Navbar.NavItem>
-        {/* <Navbar.NavItem to="/announcements">Announcements</Navbar.NavItem>
-        <Navbar.NavItem to="/articles">Blog</Navbar.NavItem> */}
+
         <div className="flex-1" />
         {session?.user.name ? (
           <AuthMenu />

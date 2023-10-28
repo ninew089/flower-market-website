@@ -21,7 +21,7 @@ import Link from 'next/link';
 
 export default function AuthMenu() {
   const { data: session, status } = useSession();
-  console.log(session?.user.image);
+
   return (
     <div className="ml-auto">
       <Menu as="div" className="relative inline-block text-left">

@@ -107,7 +107,7 @@ export const itemRouter = createTRPCRouter({
     return { ...item, image: aesDecrypt(item.image) };
   }),
   bySlug: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
-    const items = await ctx.db.item.findUnique({
+    const items = await ctx.db.item.findFirst({
       where: { slug: input },
       select: {
         id: true,
@@ -122,7 +122,7 @@ export const itemRouter = createTRPCRouter({
       },
     });
 
-    const userInfo = await ctx.db.user.findUnique({
+    const userInfo = await ctx.db.user.findFirst({
       where: { id: items?.userId },
       select: {
         id: true,
@@ -130,11 +130,8 @@ export const itemRouter = createTRPCRouter({
       },
     });
     if (!items) throw new TRPCError({ code: 'NOT_FOUND' });
-    const decryptedItems = {
-      ...items,
-      image: aesDecrypt(items.image),
-    };
-    return { ...decryptedItems, ...userInfo };
+
+    return { ...items, image: aesDecrypt(items.image), name: userInfo?.name };
   }),
   add: protectedProcedure.input(shopItems).mutation(async ({ input, ctx }) => {
     await ctx.db.item.create({
@@ -145,8 +142,6 @@ export const itemRouter = createTRPCRouter({
         userId: +ctx.session.user.id,
       },
     });
-
-    return { ...input, userId: +ctx.session.user.id };
   }),
   update: protectedProcedure
     .input(
@@ -211,11 +206,12 @@ export const itemRouter = createTRPCRouter({
   buy: protectedProcedure
     .input(z.array(z.object({ id: z.number(), total: z.number() })))
     .mutation(async ({ input, ctx }) => {
-      for (let i = 0; i < input.length - 1; i++) {
+      for (let i = 0; i < input.length; i++) {
         if (typeof input[i] === 'undefined') return;
         const item = await ctx.db.item.findUnique({
           where: { id: input[i]?.id },
         });
+
         await ctx.db.item.update({
           where: { id: input[i]?.id },
           data: { ...item, sold: (item?.sold ?? 0) + (input[i]?.total ?? 0) },
