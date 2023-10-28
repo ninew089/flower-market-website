@@ -1,12 +1,13 @@
-import { api } from "@/utils/api";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { type NextPage } from "next";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-import { type AppProps, type AppType } from "next/app";
-import { type ReactElement, type ReactNode } from "react";
+import { api } from '@/utils/api';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { type NextPage } from 'next';
+import { type Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
+import { type AppProps } from 'next/app';
+import { type ReactElement, type ReactNode } from 'react';
+import { Kanit } from 'next/font/google';
 
-import "@/styles/globals.css";
+import '@/styles/globals.css';
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (props: { children: ReactNode }) => ReactElement;
@@ -14,6 +15,11 @@ export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
 interface AppPropsWithLayout extends AppProps<{ session: Session | null }> {
   Component: NextPageWithLayout;
 }
+
+const kanit = Kanit({
+  subsets: [],
+  weight: ['400', '500', '600', '700'],
+});
 
 const MyApp = ({
   Component,
@@ -23,7 +29,10 @@ const MyApp = ({
   return (
     <SessionProvider session={session}>
       <Layout>
-        <Component {...pageProps} />
+        <main className={kanit.className}>
+          <Component {...pageProps} />
+        </main>
+
         <ReactQueryDevtools initialIsOpen />
       </Layout>
     </SessionProvider>

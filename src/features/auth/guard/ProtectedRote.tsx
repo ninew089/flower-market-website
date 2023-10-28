@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { type ReactNode, useEffect, useState } from 'react';
 import Loading from '@/features/ui/components/Loading';
+import { useAppStore } from '@/features/store';
 
 export interface ProtectedRouteProps {
   roles?: Role[];
@@ -12,16 +13,16 @@ export interface ProtectedRouteProps {
 const ProtectedRoute = ({ roles, children }: ProtectedRouteProps) => {
   const router = useRouter();
   const { data: session, status } = useSession();
-
+  const setUiToast = useAppStore((state) => state.setUiToast);
   const [isAllow, setIsAllow] = useState(false);
 
   useEffect(() => {
     if (status === 'loading') return;
     if (status === 'unauthenticated') {
-      // setUiToast({
-      //   type: 'Error',
-      //   message: 'Please login before accessing this page.',
-      // });
+      setUiToast({
+        type: 'Error',
+        message: 'Please login before accessing this page.',
+      });
       router.replace('/auth/sign-in');
       return;
     }
@@ -30,10 +31,10 @@ const ProtectedRoute = ({ roles, children }: ProtectedRouteProps) => {
       return setIsAllow(true);
     }
 
-    // setUiToast({
-    //   type: 'Error',
-    //   message: 'You are not allowed to access this page.',
-    // });
+    setUiToast({
+      type: 'Error',
+      message: 'You are not allowed to access this page.',
+    });
     router.replace('/forbidden');
   }, [roles, router, session?.user.role, status]);
 

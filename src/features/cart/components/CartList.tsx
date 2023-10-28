@@ -10,6 +10,7 @@ const CartList = () => {
   const cartList = useAppStore((state) => state.items);
   const getTotal = useAppStore((state) => state.getTotal);
   const clearAll = useAppStore((state) => state.clearAll);
+  const setUiToast = useAppStore((state) => state.setUiToast);
   const router = useRouter();
   const total = useMemo(() => getTotal(), [getTotal, cartList]);
   const { mutateAsync, isLoading } = api.item.buy.useMutation();
@@ -21,7 +22,10 @@ const CartList = () => {
     if (cartItem.length > 0) {
       await mutateAsync(cartItem);
       clearAll();
-      //setUiToast
+      setUiToast({
+        type: 'Success',
+        message: `We've confirmed your payment. Thank you for shopping with us`,
+      });
       router.push(`/market`);
     }
   };

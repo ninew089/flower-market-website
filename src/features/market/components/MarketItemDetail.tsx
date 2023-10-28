@@ -15,6 +15,7 @@ const MarketItemDetail = () => {
   const { data: item, isLoading } = api.item.bySlug.useQuery(slug);
   const { mutate } = api.item.view.useMutation();
   const addItem = useAppStore((state) => state.addItem);
+  const setUiToast = useAppStore((state) => state.setUiToast);
 
   useEffect(() => {
     if (typeof item !== 'undefined' && item !== null) {
@@ -24,6 +25,20 @@ const MarketItemDetail = () => {
 
   if (isLoading) return <Loading></Loading>;
   if (!item || typeof slug === 'undefined') return <div>Not found.</div>;
+
+  const onBuyItem = () => {
+    addItem({
+      id: item.id,
+      name: item.title,
+      price: item.price,
+      image: item.image,
+      quantity: 1,
+    });
+    setUiToast({
+      type: 'Success',
+      message: `Product added to cart successfully`,
+    });
+  };
 
   return (
     <div className="max-w-3xl mx-auto px-4 pt-4 pb-5 flex flex-col w-full">
@@ -38,24 +53,16 @@ const MarketItemDetail = () => {
         className="mx-auto rounded-md object-cover object-center w-full h-[320px]"
       />
       <div className="text-right mt-1"> sold {item.sold} items</div>
-      <p className="mt-4 text-base font-medium line-clamp-2 ">{item.title}</p>
+      <p className="mt-4 text-lg font-medium line-clamp-2  text-pink-500">
+        {item.title}
+      </p>
       <p className="text-sm font-medium line-clamp-2 ">{item.content}</p>
-      <p className="text-right font-medium mb-10 mt-2">post by {item.name}</p>
+      <p className="text-right font-medium mb-10 mt-2">
+        post by <span className="text-pink-500">{item.name}</span>
+      </p>
       <p className="text-right mt-auto font-medium mb-10">฿{item.price}</p>
 
-      <Button
-        className="mt-1"
-        color="primary"
-        onClick={() =>
-          addItem({
-            id: item.id,
-            name: item.title,
-            price: item.price,
-            image: item.image,
-            quantity: 1,
-          })
-        }
-      >
+      <Button className="mt-1" color="primary" onClick={onBuyItem}>
         Buy
       </Button>
     </div>

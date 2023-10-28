@@ -109,7 +109,7 @@ export default function AuthMenu() {
                             aria-hidden="true"
                           />
                         )}
-                        Edit
+                        Profile Edit
                       </Link>
                     )}
                   </Menu.Item>

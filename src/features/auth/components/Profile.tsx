@@ -1,21 +1,22 @@
-import { type SubmitHandler, useForm } from 'react-hook-form';
-import { type ProfileInput } from '../types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as validators from '../helpers/validators';
-import AvatarUploader from '@/features/ui/components/AvatarUploader';
-import { useSession } from 'next-auth/react';
 import { getImagePath } from '@/features/shared/helpers/upload';
-import FormField from '@/features/ui/components/form/FormField';
+import { useAppStore } from '@/features/store';
+import AvatarUploader from '@/features/ui/components/AvatarUploader';
 import Button from '@/features/ui/components/Button';
-import { useEffect } from 'react';
+import FormField from '@/features/ui/components/form/FormField';
 import { api } from '@/utils/api';
-import { useRouter } from 'next/router';
 import { aesDecrypt, aesEncrypt } from '@/utils/encrypt';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import * as validators from '../helpers/validators';
+import { type ProfileInput } from '../types';
 
 const Profile = () => {
   const router = useRouter();
   const { data: session, update: updateSession } = useSession();
-
+  const setUiToast = useAppStore((state) => state.setUiToast);
   const { mutateAsync: update } = api.auth.update.useMutation();
   const {
     handleSubmit,
@@ -37,10 +38,10 @@ const Profile = () => {
       tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
     });
 
-    // setUiToast({
-    //   type: 'Success',
-    //   message: 'Your profile has already updated.',
-    // });
+    setUiToast({
+      type: 'Success',
+      message: 'Your profile has already updated.',
+    });
 
     router.push('/market');
   };

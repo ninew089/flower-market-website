@@ -1,12 +1,13 @@
-import Link from 'next/link';
-import { ReactNode } from 'react';
-import Navbar from '../Navbar';
-import { useSession } from 'next-auth/react';
 import AuthMenu from '@/features/auth/components/AuthMenu';
-import FloatingActionButton from '../FloatingActionButton';
-import { ShoppingCartIcon } from '@heroicons/react/24/solid';
+import ProtectedResource from '@/features/auth/guard/ProtectedResource';
 import { useAppStore } from '@/features/store';
+import { ShoppingCartIcon } from '@heroicons/react/24/solid';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { ReactNode } from 'react';
+import FloatingActionButton from '../FloatingActionButton';
+import Navbar from '../Navbar';
+import Toast from '../Toast';
 
 export interface LayoutProps {
   children: ReactNode;
@@ -21,12 +22,12 @@ const Layout = ({ children }: LayoutProps) => {
     <>
       <Navbar>
         <Navbar.Navbrand></Navbar.Navbrand>
-        <Navbar.NavItem to="/market">Market Places</Navbar.NavItem>
-
+        <Navbar.NavItem to="/">Home</Navbar.NavItem>
         <div className="flex-1" />
-        {session?.user.name ? (
+        <ProtectedResource>
           <AuthMenu />
-        ) : (
+        </ProtectedResource>
+        {!session?.user.name && (
           <Navbar.NavItem to="/auth/sign-in">Login</Navbar.NavItem>
         )}
       </Navbar>
@@ -39,6 +40,7 @@ const Layout = ({ children }: LayoutProps) => {
           <ShoppingCartIcon width={24} height={24} />
         </FloatingActionButton>
       )}
+      <Toast></Toast>
     </>
   );
 };

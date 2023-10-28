@@ -55,7 +55,7 @@ const ShopList = () => {
           </Button>
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
         {items.map((item) => (
           <MarketItem key={item.id} {...item} edit userId={userId}></MarketItem>
         ))}
