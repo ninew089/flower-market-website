@@ -42,6 +42,9 @@ const Profile = () => {
   useEffect(() => {
     if (session?.user.name) setValue("name", session.user.name);
     if (session?.user.email) setValue("email", session.user.email);
+    if (session?.user.tel) setValue("tel", session.user.tel);
+  
+
   }, [session?.user.email, session?.user.name, setValue]);
 
   return (
@@ -74,6 +77,13 @@ const Profile = () => {
           placeholder="your@email.com"
           error={errors.email?.message}
           {...register("email")}
+        ></FormField>
+         <FormField
+          id="name"
+          label="Tel"
+          placeholder="Your Tel name"
+          error={errors.name?.message}
+          {...register("tel")}
         ></FormField>
         <FormField
           id="password"

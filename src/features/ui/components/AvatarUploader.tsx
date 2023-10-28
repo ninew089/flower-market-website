@@ -50,7 +50,7 @@ const AvatarUploader = ({
   };
 
   return (
-    <div className="mx-auto w-48 rounded-lg bg-white px-4 py-5 text-center shadow-lg">
+    <div className="mx-auto w-48  px-4 py-5 text-center">
       <div className="mb-4">
         <Image
           priority
@@ -59,14 +59,14 @@ const AvatarUploader = ({
           width={100}
           height={100}
           onLoadingComplete={() => setIsButtonDisabled(false)}
-          className="mx-auto w-auto rounded-full object-cover object-center"
+          className="mx-auto w-[100px] h-[100px] rounded-full object-cover object-center border-[2px] border-pink-600 p-[1px]"
         ></Image>
       </div>
       {isButtonDisabled ? (
         <Loading></Loading>
       ) : (
         <label className="mt-6 cursor-pointer">
-          <span className="mt-2 rounded-full bg-blue-500 px-4 py-2 text-sm leading-normal text-white">
+          <span className="mt-2 rounded-full bg-pink-500 px-4 py-2 text-sm leading-normal text-white">
             Select Avatar
           </span>
           <input

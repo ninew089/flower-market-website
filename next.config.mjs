@@ -11,7 +11,7 @@ const config = {
     return [
       {
         source: "/",
-        destination: "/leaves",
+        destination: "/market",
         permanent: true,
       },
     ];

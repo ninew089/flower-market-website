@@ -1,0 +1,26 @@
+import Loading from "@/features/ui/components/Loading";
+import { api } from "@/utils/api";
+import { useRouter } from "next/router";
+import MarketItem from "./MarketItem";
+
+const MarketList = () => {
+  const router = useRouter();
+  const { data: items, isLoading } = api.item.list.useQuery(); // CSR
+
+  if (isLoading) return <Loading></Loading>;
+  if (!items) return <div>Not found.</div>;
+
+  return (
+    <div className="mx-auto max-w-7xl px-5">
+      <p className="text-xl pl-5 font-medium"> Market Place</p>
+      <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3">
+      {items.map((item,index) => (
+        <MarketItem  key={item.id} {...item}></MarketItem>
+      ))}
+    </div>
+    </div>
+   
+  );
+};
+
+export default MarketList;

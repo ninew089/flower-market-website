@@ -8,6 +8,8 @@ export const login = z.object({
 export const register = login.merge(
   z.object({
     name: z.string().min(1).max(20),
+    citizenId:z.string().min(13).max(13),
+    tel:z.string()
   }),
 );
 
@@ -20,6 +22,7 @@ export const profile = register
         (v) => (v === "" ? undefined : v),
         z.string().min(8).optional(),
       ),
+      tel:z.string()
     }),
   )
   .partial();

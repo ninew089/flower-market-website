@@ -1,14 +1,14 @@
 @layer components {
   .btn {
-    @apply inline-block rounded px-6 pb-2 pt-2.5 uppercase leading-normal text-white transition duration-150 ease-in-out focus:outline-none;
+    @apply inline-block rounded-lg px-6 py-2  leading-normal text-white transition duration-150 ease-in-out focus:outline-none;
   }
 
   .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-700 focus:bg-primary-700;
+    @apply bg-pink-500 hover:bg-pink-700 focus:bg-pink-700;
   }
 
   .btn-secondary {
-    @apply bg-secondary-500 hover:bg-secondary-700 focus:bg-secondary-700;
+    @apply bg-teal-500 hover:bg-teal-700 focus:bg-teal-700;
   }
 
   .btn-success {

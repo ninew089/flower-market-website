@@ -14,6 +14,8 @@ async function main() {
       password: "Milopbo@089",
       role: "ADMIN",
       image: faker.internet.avatar(),
+      tel:faker.phone.number(),
+      citizenId:faker.helpers.fromRegExp('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]')
     },
   });
 
@@ -28,6 +30,8 @@ async function main() {
       email: faker.internet.email(),
       image: faker.internet.avatar(),
       role: faker.helpers.arrayElement(["ADMIN", "MANAGER", "MEMBER"]),
+      tel:faker.phone.number(),
+      citizenId:faker.helpers.fromRegExp('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]')
     };
     const user = await db.user.upsert({
       where: { email: createUserInput.email },
@@ -119,15 +123,17 @@ async function main() {
     const numOfItems = 100;
 
     for (let i = 0; i < numOfItems; i++) {
-      const title = faker.lorem.sentence();
+      const title = faker.commerce.productName();
       const createItmesInput: Prisma.ItemCreateInput = {
         title,
         slug: slugify(title),
         excerpt: faker.lorem.paragraph(),
-        content: faker.lorem.paragraphs({ min: 3, max: 10 }),
+        content: faker.commerce.productName(),
         image: faker.image.url(),
         price:+faker.commerce.price({min:30,max:1000}),
         user: { connect: { id: faker.helpers.arrayElement(userIds) } },
+        sold:faker.number.int({min:0,max:999}),
+        viewer:faker.number.int({min:0,max:999})
       };
   
       await db.item.upsert({

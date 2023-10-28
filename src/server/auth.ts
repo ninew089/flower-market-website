@@ -21,23 +21,28 @@ declare module 'next-auth' {
     user: {
       id: string;
       role: Role;
+      tel:string;
+      citizenId:string;
     } & DefaultSession['user'];
   }
 
   interface User {
     role: Role;
+    tel:string;
+    citizenId:string;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
     role: Role;
+    tel:string;
   }
 }
 
 function isUpdateSessionData(
   session: unknown,
-): session is Record<'name' | 'email' | 'image', string | undefined> {
+): session is Record<'name' | 'email' | 'image'|'tel', string | undefined> {
   if (!session) return false;
   if (typeof session !== 'object') return false;
 
@@ -52,13 +57,16 @@ function isUpdateSessionData(
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
+    
   },
+  secret: process.env.AUTH_SECRET,
   callbacks: {
     jwt({ token, user, session, trigger }) {
       if (trigger === 'update' && isUpdateSessionData(session)) {
         if (session.image) token.picture = session.image;
         if (session.name) token.name = session.name;
         if (session.email) token.email = session.email;
+        if (session.tel) token.tel = session.tel;
       }
 
       if (user) {
@@ -67,6 +75,8 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.name = user.name;
         token.picture = user.image;
+        token.tel = user.tel;
+        
       }
 
       return token;
@@ -81,6 +91,7 @@ export const authOptions: NextAuthOptions = {
           name: token.name,
           email: token.email,
           image: token.picture,
+          tel: token.tel
         },
       };
     },

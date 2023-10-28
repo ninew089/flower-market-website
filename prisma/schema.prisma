@@ -1,96 +1,93 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
-}
-
-enum Role {
-    ADMIN
-    MANAGER
-    MEMBER
-}
-
-enum LeaveStatus {
-    PENDING
-    APPROVED
-    REJECTED
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id            Int            @id @default(autoincrement())
-    name          String
-    email         String         @unique
-    image         String?
-    password      String
-    role          Role           @default(MEMBER)
-    createdAt     DateTime       @default(now())
-    updatedAt     DateTime       @default(now())
-    leaves        Leave[]
-    articles      Article[]
-    announcements Announcement[]
-    items         Item[]
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  image         String?
+  password      String
+  role          Role           @default(MEMBER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  citizenId     String
+  tel           String
+  announcements Announcement[]
+  articles      Article[]
+  items         Item[]
+  leaves        Leave[]
 }
 
 model Leave {
-    id              Int         @id @default(autoincrement())
-    status          LeaveStatus @default(PENDING)
-    reason          String
-    leaveDate       String
-    rejectionReason String?
-    userId          Int
-    createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @default(now())
-    user            User        @relation(fields: [userId], references: [id])
+  id              Int         @id @default(autoincrement())
+  status          LeaveStatus @default(PENDING)
+  reason          String
+  leaveDate       String
+  rejectionReason String?
+  userId          Int
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @default(now())
+  user            User        @relation(fields: [userId], references: [id])
 
-    @@unique([userId, leaveDate])
+  @@unique([userId, leaveDate])
 }
 
 model Announcement {
-    id        Int      @id @default(autoincrement())
-    title     String
-    slug      String   @unique
-    excerpt   String
-    content   String
-    userId    Int
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
-    user      User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Article {
-    id        Int      @id @default(autoincrement())
-    title     String
-    slug      String   @unique
-    excerpt   String
-    content   String
-    image     String
-    userId    Int
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
-    user      User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  image     String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Item {
-    id        Int      @id @default(autoincrement())
-    title     String
-    slug      String   @unique
-    excerpt   String
-    content   String
-    price     Int
-    image     String
-    userId    Int
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
-    user      User     @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  price     Int
+  image     String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  sold      Int      @default(0)
+  viewer    Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

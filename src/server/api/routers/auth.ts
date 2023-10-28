@@ -4,7 +4,9 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const authRouter = createTRPCRouter({
   register: publicProcedure.input(register).mutation(async ({ input, ctx }) => {
+    console.log('register')
     const hashedPassword = await bcrypt.hash(input.password, 12);
+ 
     const user = await ctx.db.user.create({
       data: {
         ...input,
@@ -16,6 +18,7 @@ export const authRouter = createTRPCRouter({
         email: true,
         role: true,
         image: true,
+        tel:true
       },
     });
 

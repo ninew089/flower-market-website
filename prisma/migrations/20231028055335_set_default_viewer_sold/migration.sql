@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Item" ALTER COLUMN "sold" SET DEFAULT 0,
+ALTER COLUMN "viewer" SET DEFAULT 0;

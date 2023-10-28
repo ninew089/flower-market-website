@@ -2,23 +2,17 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { type LoginInput, type RegisterInput } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as validators from "../helpers/validators";
-import { capitalize } from "lodash";
 import Button from "@/features/ui/components/Button";
 import FormField from "@/features/ui/components/form/FormField";
 import Link from "next/link";
 
-export type AuthFormProps =
-  | {
-      kind: "register";
-      onSubmit: SubmitHandler<RegisterInput>;
-    }
-  | {
-      kind: "login";
+export type LoginFormProps =
+   {
       onSubmit: SubmitHandler<LoginInput>;
     };
 
-const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
-  const isRegisterForm = kind === "register";
+const LoginForm = ({ onSubmit }: LoginFormProps) => {
+
   const {
     register,
     handleSubmit,
@@ -29,24 +23,15 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
       : LoginInput
   >({
     resolver: zodResolver(
-      kind === "register" ? validators.register : validators.login,
+    validators.login,
     ),
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg">
-      <h2 className="mb-4 text-center text-2xl text-primary-500">
-        {capitalize(kind)}
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-lg px-5">
+      <h2 className="mb-4 text-center font-semibold text-2xl text-pink-500">
+      login
       </h2>
-      {isRegisterForm && (
-        <FormField
-          id="name"
-          label="Name"
-          placeholder="Enter your name"
-          error={errors.name?.message}
-          {...register("name")}
-        ></FormField>
-      )}
       <FormField
         id="email"
         type="email"
@@ -54,7 +39,8 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
         placeholder="Enter your email"
         error={errors.email?.message}
         {...register("email")}
-      ></FormField>
+       />
+
       <FormField
         id="password"
         type="password"
@@ -62,19 +48,17 @@ const AuthForm = ({ kind, onSubmit }: AuthFormProps) => {
         placeholder="Enter your password"
         error={errors.password?.message}
         {...register("password")}
-      ></FormField>
+      />
       <div className="flex items-center justify-between">
         <Button type="submit" color="primary">
-          {kind}
+        Login
         </Button>
-        <Link href={isRegisterForm ? "/auth/sign-in" : "/auth/sign-up"}>
-          {isRegisterForm
-            ? "Already have an account?"
-            : "Do not have an account yet?"}
+        <Link href={ "/auth/sign-up"}>
+        Sign up?
         </Link>
       </div>
     </form>
   );
 };
 
-export default AuthForm;
+export default LoginForm;

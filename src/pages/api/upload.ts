@@ -15,6 +15,7 @@ export default async function handler(
       uploadDir: "./public/uploads",
       keepExtensions: true,
     });
+
     form.parse(req, (err, _fields, { file }) => {
       if (err) {
         res.status(500).send(err);
@@ -24,6 +25,7 @@ export default async function handler(
         resolve();
       } else {
         const sendFile = Array.isArray(file)
+       
           ? (file[0] as formidable.File)
           : file;
         res.status(200).json({ filename: sendFile.newFilename });

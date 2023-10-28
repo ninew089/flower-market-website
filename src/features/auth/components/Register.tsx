@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { type RegisterInput } from "../types";
-import AuthForm from "./AuthForm";
+import RegisterForm from "./RegisterForm";
 import { api } from "@/utils/api";
 import { useAppStore } from "@/features/store";
 
@@ -16,10 +16,11 @@ const Register = () => {
     },
   });
   const submit = (credentials: RegisterInput) => {
+    console.log(credentials)
     register(credentials);
   };
 
-  return <AuthForm kind="register" onSubmit={submit}></AuthForm>;
+  return <RegisterForm  onSubmit={submit}></RegisterForm>;
 };
 
 export default Register;
