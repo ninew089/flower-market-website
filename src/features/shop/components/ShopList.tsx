@@ -29,7 +29,7 @@ const ShopList = () => {
           </Button>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3 gap-6">
         {items.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-4 mt-20">
             <Image
@@ -58,7 +58,7 @@ const ShopList = () => {
         )}
 
         {items.map((item) => (
-          <MarketItem key={item.id} {...item}></MarketItem>
+          <MarketItem key={item.id} {...item} edit userId={userId}></MarketItem>
         ))}
       </div>
     </div>

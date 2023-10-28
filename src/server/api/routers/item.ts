@@ -100,12 +100,20 @@ export const itemRouter = createTRPCRouter({
         sold: true,
         content: true,
         excerpt: true,
+        userId: true,
       },
     });
 
+    const userInfo = await ctx.db.user.findUnique({
+      where: { id: items?.userId },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
     if (!items) throw new TRPCError({ code: 'NOT_FOUND' });
 
-    return items;
+    return { ...items, ...userInfo };
   }),
   add: protectedProcedure.input(shopItems).mutation(async ({ input, ctx }) => {
     const items = await ctx.db.item.create({

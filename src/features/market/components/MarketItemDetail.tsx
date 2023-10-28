@@ -10,19 +10,18 @@ export type MarketItemProps = Item;
 
 const MarketItemDetail = () => {
   const router = useRouter();
-  const itemId = router.query.itemId as string;
-
-  useEffect(() => {
-    if (typeof itemId === 'undefined') {
-      mutate(+itemId);
-    }
-  }, []);
-
-  const { data: item, isLoading } = api.item.byId.useQuery(+itemId);
+  const slug = router.query.slug as string;
+  const { data: item, isLoading } = api.item.bySlug.useQuery(slug);
   const { mutate } = api.item.view.useMutation();
 
+  useEffect(() => {
+    if (typeof item !== 'undefined' && item !== null) {
+      mutate(item.id);
+    }
+  }, [item]);
+
   if (isLoading) return <Loading></Loading>;
-  if (!item || typeof itemId === 'undefined') return <div>Not found.</div>;
+  if (!item || typeof slug === 'undefined') return <div>Not found.</div>;
 
   return (
     <div className="max-w-3xl mx-auto px-4 pt-4 pb-5 flex flex-col w-full">
@@ -39,7 +38,11 @@ const MarketItemDetail = () => {
       <div className="text-right mt-1"> sold {item.sold} items</div>
       <p className="mt-4 text-base font-medium line-clamp-2 ">{item.title}</p>
       <p className="text-sm font-medium line-clamp-2 ">{item.content}</p>
-      <p className="text-right mt-auto font-medium">฿{item.price}</p>
+      <p className="text-right mt-auto font-medium mb-10">
+        post by {item.name}
+      </p>
+      <p className="text-right mt-auto font-medium mb-10">฿{item.price}</p>
+
       <Button className="mt-1" color="primary">
         Buy
       </Button>

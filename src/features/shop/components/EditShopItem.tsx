@@ -9,11 +9,14 @@ import Button from '@/features/ui/components/Button';
 import { api } from '@/utils/api';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import Loading from '@/features/ui/components/Loading';
 
-const AddShopItem = () => {
+const EditShopItem = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const { mutateAsync: add, isSuccess } = api.item.add.useMutation();
+  const { mutateAsync: update, isSuccess } = api.item.update.useMutation();
+  const itemId = router.query.itemId as string;
+  const { data: item, isLoading } = api.item.byId.useQuery(+itemId);
   const {
     handleSubmit,
     register,
@@ -25,8 +28,19 @@ const AddShopItem = () => {
   });
 
   const updateProfile: SubmitHandler<ShopItemInput> = async (shopItem) => {
-    add({ ...shopItem });
+    update({ data: shopItem, id: +itemId });
   };
+
+  useEffect(() => {
+    if (typeof item !== 'undefined' && item !== null) {
+      setValue('title', item.title);
+      setValue('content', item.content);
+      setValue('excerpt', item.excerpt);
+      setValue('image', item.image);
+      setValue('price', item.price);
+      setValue('slug', item.slug);
+    }
+  }, [item]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -34,12 +48,14 @@ const AddShopItem = () => {
     }
   }, [isSuccess]);
 
+  if (isLoading) return <Loading></Loading>;
+
   return (
     <div className="mx-auto max-w-lg">
       <form onSubmit={handleSubmit(updateProfile)}>
         <div className="center mx-auto py-3">
           <FlowerUploader
-            defaultImage={'/assets/images/avatar.png'}
+            defaultImage={item?.image ?? '/assets/images/avatar.png'}
             onImageChanged={(image) => {
               setValue('image', '/uploads/' + image, { shouldValidate: true });
             }}
@@ -93,11 +109,11 @@ const AddShopItem = () => {
           color={isValid ? 'primary' : 'default'}
           disabled={!isValid}
         >
-          Add My Flower
+          Update
         </Button>
       </form>
     </div>
   );
 };
 
-export default AddShopItem;
+export default EditShopItem;
