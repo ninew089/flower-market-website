@@ -3,6 +3,7 @@ import { z } from "zod";
 import { slugify } from "@/features/shared/helpers/slugify";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
+import { shopItems } from "@/features/shop/helpers/validators";
 
 export const itemRouter = createTRPCRouter({
   list: publicProcedure.query(async ({ ctx }) => {
@@ -70,26 +71,17 @@ export const itemRouter = createTRPCRouter({
   }),
   add: protectedProcedure
     .input(
-      z.object({
-        title: z.string(),
-        image: z.string(),
-        excerpt: z.string(),
-        content: z.string(),
-        price:z.number()
-        
-      }),
+      shopItems
     )
     .mutation(async ({ input, ctx }) => {
+    
       const items = await ctx.db.item.create({
         data: {
           ...input,
-          sold:0,
-          viewer:0,
-          slug: slugify(input.title),
-          userId: 1,
+          slug: slugify(input.slug),  
+          userId: parseInt(ctx.session.user.id),
         },
       });
-
       return items;
     }),
   update: protectedProcedure

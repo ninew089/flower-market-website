@@ -75,8 +75,8 @@ model Item {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  sold      Int      @default(0)
-  viewer    Int      @default(0)
+  sold      Int?      @default(0)
+  viewer    Int?     @default(0)
   user      User     @relation(fields: [userId], references: [id])
 }
 

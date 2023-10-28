@@ -17,7 +17,7 @@ const MarketItem = ({  id,slug,title,image,price }: MarketItemProps) => {
           height="0"
           sizes="100vw"
           objectFit="cover"
-          className="mx-auto rounded-md object-cover object-center w-full h-auto"
+          className="mx-auto rounded-md object-cover object-center w-full h-[240px]"
         />
         <p className="mt-4 text-base font-medium line-clamp-2 ">{title}</p>
         <p className="text-right mt-auto font-medium">฿{price}</p>

@@ -7,7 +7,7 @@ const NavBrand = () => {
       <Image
         priority
         src="/assets/images/logo.png"
-        alt="Absence Management"
+        alt="logo"
         width={50}
         height={50}
       />

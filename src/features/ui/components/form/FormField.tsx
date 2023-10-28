@@ -7,6 +7,7 @@ export interface FormFieldProps extends ComponentPropsWithoutRef<"input"> {
 
 const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
   ({ id, type = "text", label, placeholder, error, ...props }, ref) => {
+
     return (
       <div className="mb-4">
         <label htmlFor={id} className="text-sm font-medium text-gray-700">
