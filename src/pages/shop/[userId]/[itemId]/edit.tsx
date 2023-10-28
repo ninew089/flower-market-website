@@ -1,9 +1,14 @@
+import ProtectedRoute from '@/features/auth/guard/ProtectedRote';
 import EditShopItem from '@/features/shop/components/EditShopItem';
 import Layout from '@/features/ui/components/layouts/Normal';
 import { NextPageWithLayout } from '@/pages/_app';
 
 const EditShopItemPage: NextPageWithLayout = () => {
-  return <EditShopItem></EditShopItem>;
+  return (
+    <ProtectedRoute>
+      <EditShopItem></EditShopItem>
+    </ProtectedRoute>
+  );
 };
 
 EditShopItemPage.getLayout = Layout;
