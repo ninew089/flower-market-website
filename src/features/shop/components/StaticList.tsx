@@ -1,36 +1,34 @@
-import MarketItem from '@/features/market/components/MarketItem';
+import ShopStaticCard from '@/features/shop/components/ShopStaticCard';
 import Button from '@/features/ui/components/Button';
 import Loading from '@/features/ui/components/Loading';
 import { api } from '@/utils/api';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-const ShopList = () => {
+const StaticList = () => {
   const router = useRouter();
   const userId = router.query.userId as string;
   if (typeof userId === 'undefined') return <div>Not found.</div>;
 
-  const { data: items, isLoading } = api.item.byUserId.useQuery(+userId); // CSR
+  const { data: items, isLoading } = api.item.byUserIdWithStatic.useQuery(
+    parseInt(userId),
+  ); // CSR
 
   if (isLoading) return <Loading></Loading>;
   if (!items) return <div>Not found.</div>;
 
   return (
-    <div className="mx-auto max-w-7xl px-5">
+    <div className="max-w-3xl mx-auto px-5">
       <div className="flex items-center justify-between mb-10">
-        <p className="text-xl pl-5 font-medium"> Market Place</p>
-        {items.length > 0 && (
-          <Button
-            color="primary"
-            className="w-fit h-fit"
-            onClick={() => router.push(`/shop/${userId}/add`)}
-          >
-            Add your Flower
-          </Button>
-        )}
+        <p className="text-xl pl-5 font-medium">Static</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3">
-        {items.length === 0 && (
+      <p className="text-xl pl-5 font-medium mb-10">
+        Total Sell: ฿{items.totalSell}
+      </p>
+
+      <p className="text-xl pl-5 font-medium">Items</p>
+      <div className="flex flex-col gap-y-6">
+        {items.listItems.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-4 mt-20">
             <Image
               priority
@@ -57,12 +55,12 @@ const ShopList = () => {
           </div>
         )}
 
-        {items.map((item) => (
-          <MarketItem key={item.id} {...item}></MarketItem>
+        {items.listItems.map((item) => (
+          <ShopStaticCard key={item.id} {...item}></ShopStaticCard>
         ))}
       </div>
     </div>
   );
 };
 
-export default ShopList;
+export default StaticList;

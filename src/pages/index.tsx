@@ -1,95 +1,40 @@
-import { useState } from "react";
-import Button from "@/features/ui/components/Button";
-import { api } from "@/utils/api";
+import Button from '@/features/ui/components/Button';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { NextPageWithLayout } from './_app';
+import Layout from '@/features/ui/components/layouts/Normal';
 
-interface ArticleDetailsProps {
-  id: number;
-}
-
-const ArticleDetails = ({ id }: ArticleDetailsProps) => {
-  const { data: article, isLoading } = api.article.byId.useQuery(id);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (!article) return <div>No content.</div>;
-
-  return (
-    <ul>
-      <li>{article.title}</li>
-      <li>{article.image}</li>
-      <li>{article.slug}</li>
-    </ul>
-  );
-};
-
-const IndexPage = () => {
-  const utils = api.useContext();
-  const list = utils.article.list;
-  const [currentId, setCurrentId] = useState(-1);
-  const { data: articles, isLoading } = api.article.list.useQuery();
-  const { mutateAsync: addArticle } = api.article.add.useMutation({
-    onSuccess() {
-      list.invalidate();
-    },
-  });
-  const { mutateAsync: updateArticle } = api.article.update.useMutation({
-    onSuccess() {
-      list.invalidate();
-    },
-  });
-  const { mutateAsync: removeArticle } = api.article.remove.useMutation({
-    onSuccess() {
-      list.invalidate();
-    },
-  });
-
-  const dateString = new Date().toISOString();
-
-  const add = () => {
-    addArticle({
-      title: `My Title: ${dateString}`,
-      excerpt: `My Excerpt: ${dateString}`,
-      content: `My Content: ${dateString}`,
-      image: "/uploads/photo-1678382154583-b45867cfc331.avif",
-    });
-  };
-  const update = (id: number) => {
-    updateArticle({
-      id,
-      data: {
-        title: `Update Title: ${dateString}`,
-        excerpt: `Update Excerpt: ${dateString}`,
-        content: `Update Content: ${dateString}`,
-      },
-    });
-  };
-  const remove = (id: number) => {
-    removeArticle(id);
-  };
-
-  if (isLoading) return <div>Loading...</div>;
-  if (!articles) return <div>No content.</div>;
-
+const IndexPage: NextPageWithLayout = () => {
+  const router = useRouter();
   return (
     <div>
-      <Button color="primary" onClick={add}>
-        Add
-      </Button>
-      <br />
-      <ul>
-        {articles.map((article) => (
-          <li key={article.id} className="flex">
-            <Button onClick={() => setCurrentId(article.id)}>
-              Show Details
-            </Button>
-            <Button onClick={() => update(article.id)}>Edit</Button>
-            <Button onClick={() => remove(article.id)}>Delete</Button>
-            {article.title}
-          </li>
-        ))}
-      </ul>
-      {currentId !== -1 && <ArticleDetails id={currentId}></ArticleDetails>}
+      <div className="flex flex-col items-center justify-center gap-4 mt-20">
+        <Image
+          priority
+          src="/assets/images/logo.png"
+          alt="logo"
+          width={100}
+          height={100}
+        />
+        <p className="text-xl text-pink-600 font-semibold text-center">
+          Wellcome to Flowshiny MarketPlace
+        </p>
+        <p className="text-sm max-w-[300px] text-center text-gray-600">
+          Start today and watch your customers feel the joy of your exquisite
+          blooms! 🌼🌸🌻
+        </p>
+        <Button
+          color="primary"
+          className="w-fit h-fit"
+          onClick={() => router.push(`/market`)}
+        >
+          Get Start 🌼
+        </Button>
+      </div>
     </div>
   );
 };
+
+IndexPage.getLayout = Layout;
 
 export default IndexPage;

@@ -13,7 +13,7 @@ const MarketList = () => {
   return (
     <div className="mx-auto max-w-7xl px-5">
       <p className="text-xl pl-5 font-medium"> Market Place</p>
-      <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-3 gap-6">
       {items.map((item,index) => (
         <MarketItem  key={item.id} {...item}></MarketItem>
       ))}

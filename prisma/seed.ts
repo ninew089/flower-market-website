@@ -1,21 +1,23 @@
-import { db } from "@/server/db";
-import { faker } from "@faker-js/faker";
-import { type LeaveStatus, type Prisma } from "@prisma/client";
-import { slugify } from "@/features/shared/helpers/slugify";
+import { db } from '@/server/db';
+import { faker } from '@faker-js/faker';
+import { type Prisma } from '@prisma/client';
+import { slugify } from '@/features/shared/helpers/slugify';
 
 async function main() {
   // Create Admin
   const admin = await db.user.upsert({
-    where: { email: "jittanan.jck@gmail.com" },
+    where: { email: 'jittanan.jck@gmail.com' },
     update: {},
     create: {
-      email: "jittanan.jck@gmail.com",
-      name: "Admin",
-      password: "Milopbo@089",
-      role: "ADMIN",
+      email: 'jittanan.jck@gmail.com',
+      name: 'Admin',
+      password: 'Milopbo@089',
+      role: 'ADMIN',
       image: faker.internet.avatar(),
-      tel:faker.phone.number(),
-      citizenId:faker.helpers.fromRegExp('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]')
+      tel: faker.phone.number(),
+      citizenId: faker.helpers.fromRegExp(
+        '[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]',
+      ),
     },
   });
 
@@ -29,9 +31,11 @@ async function main() {
       password: faker.internet.password(),
       email: faker.internet.email(),
       image: faker.internet.avatar(),
-      role: faker.helpers.arrayElement(["ADMIN", "MANAGER", "MEMBER"]),
-      tel:faker.phone.number(),
-      citizenId:faker.helpers.fromRegExp('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]')
+      role: faker.helpers.arrayElement(['ADMIN', 'MANAGER', 'MEMBER']),
+      tel: faker.phone.number(),
+      citizenId: faker.helpers.fromRegExp(
+        '[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]',
+      ),
     };
     const user = await db.user.upsert({
       where: { email: createUserInput.email },
@@ -42,108 +46,31 @@ async function main() {
     userIds.push(user.id);
   }
 
-  // Create Leaves
-  const numOfLeaves = 100;
+  // Create Item
+  const numOfItems = 100;
 
-  for (let i = 0; i < numOfLeaves; i++) {
-    const status: LeaveStatus = faker.helpers.arrayElement([
-      "PENDING",
-      "APPROVED",
-      "REJECTED",
-    ]);
-    const userId = faker.helpers.arrayElement(userIds);
-    const leaveDate = faker.date.future().toISOString();
-    const createLeaveInput: Prisma.LeaveCreateInput = {
-      leaveDate,
-      reason: faker.lorem.paragraph(),
-      status,
-      user: { connect: { id: userId } },
-      rejectionReason:
-        status === "REJECTED" ? faker.lorem.paragraph() : undefined,
-    };
-
-    await db.leave.upsert({
-      where: {
-        userId_leaveDate: {
-          userId,
-          leaveDate,
-        },
-      },
-      update: {},
-      create: createLeaveInput,
-    });
-  }
-
-  // Create Announcements
-  const numOfAnnouncements = 100;
-
-  for (let i = 0; i < numOfAnnouncements; i++) {
-    const title = faker.lorem.sentence();
-    const createAnnouncementInput: Prisma.AnnouncementCreateInput = {
+  for (let i = 0; i < numOfItems; i++) {
+    const title = faker.commerce.productName();
+    const createItmesInput: Prisma.ItemCreateInput = {
       title,
       slug: slugify(title),
       excerpt: faker.lorem.paragraph(),
-      content: faker.lorem.paragraphs({ min: 3, max: 10 }),
-      user: { connect: { id: faker.helpers.arrayElement(userIds) } },
-    };
-
-    await db.announcement.upsert({
-      where: {
-        slug: createAnnouncementInput.slug,
-      },
-      update: {},
-      create: createAnnouncementInput,
-    });
-  }
-
-  // Create Articles
-  const numOfArticles = 100;
-
-  for (let i = 0; i < numOfArticles; i++) {
-    const title = faker.lorem.sentence();
-    const createArticleInput: Prisma.ArticleCreateInput = {
-      title,
-      slug: slugify(title),
-      excerpt: faker.lorem.paragraph(),
-      content: faker.lorem.paragraphs({ min: 3, max: 10 }),
+      content: faker.commerce.productName(),
       image: faker.image.url(),
+      price: +faker.commerce.price({ min: 30, max: 1000 }),
       user: { connect: { id: faker.helpers.arrayElement(userIds) } },
+      sold: faker.number.int({ min: 0, max: 999 }),
+      viewer: faker.number.int({ min: 0, max: 999 }),
     };
 
-    await db.article.upsert({
+    await db.item.upsert({
       where: {
-        slug: createArticleInput.slug,
+        slug: createItmesInput.slug,
       },
       update: {},
-      create: createArticleInput,
+      create: createItmesInput,
     });
   }
-
-    // Create Item
-    const numOfItems = 100;
-
-    for (let i = 0; i < numOfItems; i++) {
-      const title = faker.commerce.productName();
-      const createItmesInput: Prisma.ItemCreateInput = {
-        title,
-        slug: slugify(title),
-        excerpt: faker.lorem.paragraph(),
-        content: faker.commerce.productName(),
-        image: faker.image.url(),
-        price:+faker.commerce.price({min:30,max:1000}),
-        user: { connect: { id: faker.helpers.arrayElement(userIds) } },
-        sold:faker.number.int({min:0,max:999}),
-        viewer:faker.number.int({min:0,max:999})
-      };
-  
-      await db.item.upsert({
-        where: {
-          slug: createItmesInput.slug,
-        },
-        update: {},
-        create: createItmesInput,
-      });
-    }
 }
 
 main()
