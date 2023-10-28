@@ -2,6 +2,7 @@ import { db } from '@/server/db';
 import { faker } from '@faker-js/faker';
 import { type Prisma } from '@prisma/client';
 import { slugify } from '@/features/shared/helpers/slugify';
+import { aesEncrypt } from '@/utils/encrypt';
 
 async function main() {
   // Create Admin

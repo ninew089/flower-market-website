@@ -9,6 +9,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { db } from '@/server/db';
 import { type Role } from '@prisma/client';
+import { aesDecrypt } from '@/utils/encrypt';
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,28 +22,28 @@ declare module 'next-auth' {
     user: {
       id: string;
       role: Role;
-      tel:string;
-      citizenId:string;
+      tel: string;
+      citizenId: string;
     } & DefaultSession['user'];
   }
 
   interface User {
     role: Role;
-    tel:string;
-    citizenId:string;
+    tel: string;
+    citizenId: string;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
     role: Role;
-    tel:string;
+    tel: string;
   }
 }
 
 function isUpdateSessionData(
   session: unknown,
-): session is Record<'name' | 'email' | 'image'|'tel', string | undefined> {
+): session is Record<'name' | 'email' | 'image' | 'tel', string | undefined> {
   if (!session) return false;
   if (typeof session !== 'object') return false;
 
@@ -57,7 +58,6 @@ function isUpdateSessionData(
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
-    
   },
   secret: process.env.AUTH_SECRET,
   callbacks: {
@@ -74,9 +74,8 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.role = user.role;
         token.name = user.name;
-        token.picture = user.image;
+        token.picture = user.image ? aesDecrypt(user.image) : undefined;
         token.tel = user.tel;
-        
       }
 
       return token;
@@ -91,7 +90,7 @@ export const authOptions: NextAuthOptions = {
           name: token.name,
           email: token.email,
           image: token.picture,
-          tel: token.tel
+          tel: token.tel,
         },
       };
     },

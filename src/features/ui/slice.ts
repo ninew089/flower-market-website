@@ -1,13 +1,13 @@
-import { type AppSliceCreator } from "../store";
+import { type AppSliceCreator } from '../store';
 
 export interface UiSlice {
   ui: {
     toast: {
-      type: "Success" | "Error";
+      type: 'Success' | 'Error';
       message: string;
     } | null;
   };
-  setUiToast: (toast: UiSlice["ui"]["toast"]) => void;
+  setUiToast: (toast: UiSlice['ui']['toast']) => void;
   clearUiToast: () => void;
 }
 

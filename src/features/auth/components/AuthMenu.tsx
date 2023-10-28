@@ -21,7 +21,7 @@ import Link from 'next/link';
 
 export default function AuthMenu() {
   const { data: session, status } = useSession();
-console.log(session?.user.image)
+  console.log(session?.user.image);
   return (
     <div className="ml-auto">
       <Menu as="div" className="relative inline-block text-left">
@@ -31,7 +31,7 @@ console.log(session?.user.image)
               priority
               src={
                 session?.user.image
-                  ? '/uploads/'+session?.user.image
+                  ? '/uploads/' + session?.user.image
                   : '/assets/images/avatar.png'
               }
               alt={session?.user.name ?? 'Member'}
@@ -58,7 +58,7 @@ console.log(session?.user.image)
             <div className="px-1 py-1 ">
               {status === 'authenticated' && (
                 <>
-                     <Menu.Item>
+                  <Menu.Item>
                     {({ active }) => (
                       <Link
                         href={`/shop/${session.user.id}`}
@@ -66,11 +66,11 @@ console.log(session?.user.image)
                           active ? 'bg-violet-500 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
-                         <ShoppingCartIcon
-                            className="mr-2 h-5 w-5"
-                            aria-hidden="true"
-                          />
-                       My Shop
+                        <ShoppingCartIcon
+                          className="mr-2 h-5 w-5"
+                          aria-hidden="true"
+                        />
+                        My Shop
                       </Link>
                     )}
                   </Menu.Item>
@@ -82,11 +82,11 @@ console.log(session?.user.image)
                           active ? 'bg-violet-500 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
-                         <Bars3BottomLeftIcon
-                            className="mr-2 h-5 w-5"
-                            aria-hidden="true"
-                          />
-                       Static
+                        <Bars3BottomLeftIcon
+                          className="mr-2 h-5 w-5"
+                          aria-hidden="true"
+                        />
+                        Static
                       </Link>
                     )}
                   </Menu.Item>
@@ -116,7 +116,7 @@ console.log(session?.user.image)
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        onClick={() => signOut()}
+                        onClick={() => signOut({ callbackUrl: '/market' })}
                         className={`${
                           active ? 'bg-violet-500 text-white' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

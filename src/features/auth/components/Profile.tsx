@@ -43,7 +43,7 @@ const Profile = () => {
       message: 'Your profile has already updated.',
     });
 
-    router.push('/leaves');
+    router.push('/market');
   };
 
   useEffect(() => {
@@ -53,13 +53,13 @@ const Profile = () => {
   }, [session?.user.email, session?.user.name, setValue]);
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-lg px-5">
       <form onSubmit={handleSubmit(updateProfile)}>
         <div className="center mx-auto py-3">
           <AvatarUploader
             defaultImage={
               session?.user.image
-                ? getImagePath(session?.user.image)
+                ? getImagePath(session.user.image)
                 : '/assets/images/avatar.png'
             }
             onImageChanged={(image) => {
@@ -90,14 +90,7 @@ const Profile = () => {
           error={errors.name?.message}
           {...register('tel')}
         ></FormField>
-        <FormField
-          id="password"
-          type="password"
-          label="Password"
-          placeholder="your-password-8-chars-at-least"
-          error={errors.password?.message}
-          {...register('password')}
-        ></FormField>
+
         <Button
           type="submit"
           align="center"

@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { api } from '@/utils/api';
 import Loading from '@/features/ui/components/Loading';
 import Button from '@/features/ui/components/Button';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppStore } from '@/features/store';
 
 export type MarketItemProps = Item;
 
@@ -13,6 +14,7 @@ const MarketItemDetail = () => {
   const slug = router.query.slug as string;
   const { data: item, isLoading } = api.item.bySlug.useQuery(slug);
   const { mutate } = api.item.view.useMutation();
+  const addItem = useAppStore((state) => state.addItem);
 
   useEffect(() => {
     if (typeof item !== 'undefined' && item !== null) {
@@ -43,7 +45,19 @@ const MarketItemDetail = () => {
       </p>
       <p className="text-right mt-auto font-medium mb-10">฿{item.price}</p>
 
-      <Button className="mt-1" color="primary">
+      <Button
+        className="mt-1"
+        color="primary"
+        onClick={() =>
+          addItem({
+            id: item.id,
+            name: item.title,
+            price: item.price,
+            image: item.image,
+            quantity: 0,
+          })
+        }
+      >
         Buy
       </Button>
     </div>
