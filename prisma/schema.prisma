@@ -17,9 +17,10 @@ model User {
   role      Role     @default(MEMBER)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  citizenId String
+  citizenId String   @unique
   tel       String
   items     Item[]
+  sale      Sale[]
 }
 
 model Item {
@@ -36,6 +37,19 @@ model Item {
   sold      Int?     @default(0)
   viewer    Int?     @default(0)
   user      User     @relation(fields: [userId], references: [id])
+  sale      Sale[]
+}
+
+model Sale {
+  id       Int      @id @default(autoincrement())
+  saleTime DateTime @default(now())
+  userId   Int
+  itemId   Int
+  itemName String
+  quantity Int
+  price    Int
+  item     Item     @relation(fields: [itemId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
 }
 
 enum Role {

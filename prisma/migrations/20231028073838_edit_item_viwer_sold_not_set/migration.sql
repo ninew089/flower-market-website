@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Item" ALTER COLUMN "sold" DROP NOT NULL,
-ALTER COLUMN "viewer" DROP NOT NULL;

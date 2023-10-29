@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { profile, register } from '@/features/auth/helpers/validators';
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 import { aesEncrypt } from '@/utils/encrypt';
+import { TRPCError } from '@trpc/server';
 
 export const authRouter = createTRPCRouter({
   register: publicProcedure.input(register).mutation(async ({ input, ctx }) => {
@@ -28,24 +29,27 @@ export const authRouter = createTRPCRouter({
     .input(profile)
     .mutation(async ({ input: { password, image, ...data }, ctx }) => {
       const id = +ctx.session.user.id;
-
-      const profile = await ctx.db.user.update({
-        where: {
-          id,
-        },
-        data: {
-          ...data,
-          image: image ? await aesEncrypt(image) : undefined,
-          password: password ? await bcrypt.hash(password, 12) : undefined,
-        },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          image: true,
-        },
-      });
+      try {
+        const profile = await ctx.db.user.update({
+          where: {
+            id,
+          },
+          data: {
+            ...data,
+            image: image ? await aesEncrypt(image) : undefined,
+            password: password ? await bcrypt.hash(password, 12) : undefined,
+          },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            image: true,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({ code: 'BAD_REQUEST' });
+      }
 
       return profile;
     }),

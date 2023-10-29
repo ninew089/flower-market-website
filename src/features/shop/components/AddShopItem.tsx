@@ -9,6 +9,8 @@ import Button from '@/features/ui/components/Button';
 import { api } from '@/utils/api';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useDebounce } from '@/hooks/useDebounce';
+import { makeSlug } from '../helpers/slug';
 
 const AddShopItem = () => {
   const router = useRouter();
@@ -18,12 +20,15 @@ const AddShopItem = () => {
     handleSubmit,
     register,
     setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm<ShopItemInput>({
     resolver: zodResolver(validators.shopItems),
     defaultValues: { image: undefined },
   });
 
+  const productName = watch('title');
+  const debouncedValue = useDebounce<string>(productName, 500);
   const updateProfile: SubmitHandler<ShopItemInput> = async (shopItem) => {
     add({ ...shopItem });
   };
@@ -33,6 +38,12 @@ const AddShopItem = () => {
       router.push(`/shop/${session?.user.id}`);
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (typeof debouncedValue !== 'undefined') {
+      setValue('slug', makeSlug(debouncedValue));
+    }
+  }, [debouncedValue]);
 
   return (
     <div className="mx-auto max-w-lg">

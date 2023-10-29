@@ -246,10 +246,22 @@ export const itemRouter = createTRPCRouter({
         const item = await ctx.db.item.findUnique({
           where: { id: input[i]?.id },
         });
+        if (item === null || typeof input[i] === 'undefined') {
+          throw new TRPCError({ code: 'FORBIDDEN' });
+        }
+        await ctx.db.sale.create({
+          data: {
+            itemId: +item.id,
+            itemName: item.title,
+            userId: +item.userId,
+            quantity: input[i]?.total ?? 0,
+            price: (input[i]?.total ?? 0) * item.price,
+          },
+        });
 
         await ctx.db.item.update({
           where: { id: input[i]?.id },
-          data: { ...item, sold: (item?.sold ?? 0) + (input[i]?.total ?? 0) },
+          data: { ...item, sold: (item.sold ?? 0) + (input[i]?.total ?? 0) },
         });
       }
     }),
