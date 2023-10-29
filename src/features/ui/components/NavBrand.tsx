@@ -11,7 +11,9 @@ const NavBrand = () => {
         width={50}
         height={50}
       />
-      <div className="text-pink-600 text-xl font-semibold">Flowshiny</div>
+      <div className="text-pink-600 text-xl font-semibold hidden lg:block">
+        Flowshiny
+      </div>
     </Link>
   );
 };

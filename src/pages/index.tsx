@@ -17,7 +17,7 @@ const IndexPage: NextPageWithLayout = () => {
           height={100}
         />
         <p className="text-xl text-pink-600 font-semibold text-center">
-          Wellcome to Flowshiny MarketPlace
+          Welcome to Flowshiny MarketPlace
         </p>
         <p className="text-sm max-w-[300px] text-center text-gray-600">
           Start today and watch your customers feel the joy of your exquisite

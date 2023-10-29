@@ -40,7 +40,7 @@ const MarketList = () => {
           onChange={(e) => setSearch(e.target.value)}
           placeholder={'Search your flower...'}
           type="text"
-          className="mt-1 max-w-xl block w-full rounded-md border-gray-900 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="mt-1 max-w-xl block w-full rounded-md border border-gray-100 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         ></input>
       </div>
       {isLoading ? (

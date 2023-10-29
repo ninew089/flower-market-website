@@ -1,4 +1,4 @@
-import { aesEncrypt } from '@/utils/encrypt';
+import { validateInput } from '@/utils/validate';
 import * as z from 'zod';
 
 export const login = z.object({
@@ -28,9 +28,17 @@ const citizenId = z
 
 export const registerUI = login.merge(
   z.object({
-    name: z.string().min(1).max(20),
+    name: z
+      .string()
+      .min(1)
+      .max(20)
+      .refine((val) => validateInput(val), {
+        message: 'Should not using special characters',
+      }),
     citizenId: citizenId,
-    tel: z.string(),
+    tel: z.string().refine((val) => validateInput(val), {
+      message: 'Should not using special characters',
+    }),
   }),
 );
 

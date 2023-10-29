@@ -6,6 +6,8 @@ import Loading from '@/features/ui/components/Loading';
 import Button from '@/features/ui/components/Button';
 import { useEffect } from 'react';
 import { useAppStore } from '@/features/store';
+import Link from 'next/link';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 
 export type MarketItemProps = Item;
 
@@ -42,6 +44,10 @@ const MarketItemDetail = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 pt-4 pb-5 flex flex-col w-full">
+      <Link href="/market" className="flex gap-x-1">
+        <ChevronLeftIcon width={24} />
+        Back
+      </Link>
       <Image
         priority
         src={item.image}
