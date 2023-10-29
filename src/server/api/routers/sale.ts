@@ -25,7 +25,7 @@ export const saleRouter = createTRPCRouter({
     const timestampSet: string[] = [];
 
     sales.forEach(async (record) => {
-      const { saleTime, price, itemId, itemName } = record;
+      const { saleTime, price, itemName } = record;
       const formattedSaleTime = new Date(saleTime).toString();
       if (!timestampSet.includes(formattedSaleTime)) {
         timestampSet.push(formattedSaleTime);

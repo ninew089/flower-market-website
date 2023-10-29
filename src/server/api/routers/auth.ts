@@ -7,7 +7,7 @@ import { TRPCError } from '@trpc/server';
 export const authRouter = createTRPCRouter({
   register: publicProcedure.input(register).mutation(async ({ input, ctx }) => {
     const hashedPassword = await bcrypt.hash(input.password, 12);
-    const citizenId = await aesDecrypt(input.citizenId, 12);
+    const citizenId = await aesDecrypt(input.citizenId);
     const user = await ctx.db.user.create({
       data: {
         ...input,

@@ -22,6 +22,8 @@ export const itemRouter = createTRPCRouter({
           slug: true,
           image: true,
           price: true,
+          available: true,
+          stock: true,
         },
         orderBy: {
           updatedAt: 'desc',
@@ -44,21 +46,42 @@ export const itemRouter = createTRPCRouter({
 
       return searchResults;
     }),
+  findStockList: publicProcedure
+    .input(z.array(z.number()))
+    .query(async ({ input, ctx }) => {
+      const items = await ctx.db.item.findMany({
+        where: {
+          id: { in: input },
+        },
+        select: {
+          stock: true,
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      });
+
+      return items;
+    }),
   recommendList: publicProcedure.query(async ({ input, ctx }) => {
     const items = await ctx.db.item.findMany({
+      where: {
+        available: true,
+      },
       select: {
         id: true,
         title: true,
         slug: true,
         image: true,
         price: true,
+        available: true,
+        stock: true,
       },
       orderBy: {
         sold: 'desc',
       },
       take: 4,
     });
-
     const decryptedItems = items.map((item) => ({
       ...item,
       image: aesDecrypt(item.image),
@@ -77,6 +100,8 @@ export const itemRouter = createTRPCRouter({
           title: true,
           image: true,
           price: true,
+          available: true,
+          stock: true,
         },
       });
       if (items === null) {
@@ -102,6 +127,8 @@ export const itemRouter = createTRPCRouter({
           price: true,
           viewer: true,
           sold: true,
+          available: true,
+          stock: true,
         },
         orderBy: {
           sold: 'desc',
@@ -134,6 +161,8 @@ export const itemRouter = createTRPCRouter({
         sold: true,
         content: true,
         excerpt: true,
+        available: true,
+        stock: true,
       },
     });
     if (item === null) {
@@ -154,6 +183,8 @@ export const itemRouter = createTRPCRouter({
         content: true,
         excerpt: true,
         userId: true,
+        available: true,
+        stock: true,
       },
     });
 
@@ -182,15 +213,7 @@ export const itemRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number(),
-        data: z
-          .object({
-            title: z.string(),
-            image: z.string(),
-            excerpt: z.string(),
-            content: z.string(),
-            price: z.number(),
-          })
-          .partial(),
+        data: shopItems.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -241,6 +264,25 @@ export const itemRouter = createTRPCRouter({
   buy: publicProcedure
     .input(z.array(z.object({ id: z.number(), total: z.number() })))
     .mutation(async ({ input, ctx }) => {
+      //check stock
+      for (let i = 0; i < input.length; i++) {
+        const item = await ctx.db.item.findUnique({
+          where: { id: input[i]?.id },
+        });
+        if (item === null || typeof input[i] === 'undefined') {
+          throw new TRPCError({ code: 'FORBIDDEN' });
+        }
+        if (
+          typeof input[i]?.total === 'number' &&
+          item.stock < (input[i]?.total ?? 0)
+        ) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Some Product out of stock, Please remove product`,
+          });
+        }
+      }
+      //update
       for (let i = 0; i < input.length; i++) {
         if (typeof input[i] === 'undefined') return;
         const item = await ctx.db.item.findUnique({
@@ -261,7 +303,11 @@ export const itemRouter = createTRPCRouter({
 
         await ctx.db.item.update({
           where: { id: input[i]?.id },
-          data: { ...item, sold: (item.sold ?? 0) + (input[i]?.total ?? 0) },
+          data: {
+            ...item,
+            sold: (item.sold ?? 0) + (input[i]?.total ?? 0),
+            stock: item.stock - (input[i]?.total ?? 0),
+          },
         });
       }
     }),

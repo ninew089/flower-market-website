@@ -28,7 +28,10 @@ const EditShopItem = () => {
   });
 
   const updateProfile: SubmitHandler<ShopItemInput> = async (shopItem) => {
-    update({ data: shopItem, id: +itemId });
+    update({
+      data: { ...shopItem, available: !!shopItem.available ? 'true' : 'false' },
+      id: +itemId,
+    });
   };
 
   useEffect(() => {
@@ -39,6 +42,13 @@ const EditShopItem = () => {
       setValue('image', item.image);
       setValue('price', item.price);
       setValue('slug', item.slug);
+      setValue('stock', item.stock);
+      setValue(
+        'available',
+        !!item.available
+          ? ('true' as any as boolean)
+          : ('false' as any as boolean),
+      );
     }
   }, [item]);
 
@@ -102,6 +112,29 @@ const EditShopItem = () => {
             validate: (value) => value > 0,
           })}
         />
+        <FormField
+          id="stock"
+          label="Stock"
+          type="number"
+          placeholder="Your Stock"
+          error={errors.stock?.message}
+          {...register('stock', {
+            valueAsNumber: true,
+            validate: (value) => value > 0,
+          })}
+        />
+        <label>
+          <div>
+            <input type="radio" value="true" {...register('available')} />
+            Available
+          </div>
+        </label>
+        <label>
+          <div>
+            <input type="radio" value="false" {...register('available')} />
+            Sold Out
+          </div>
+        </label>
 
         <Button
           type="submit"

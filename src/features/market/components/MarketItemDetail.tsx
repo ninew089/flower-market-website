@@ -7,13 +7,16 @@ import Button from '@/features/ui/components/Button';
 import { useEffect } from 'react';
 import { useAppStore } from '@/features/store';
 import Link from 'next/link';
-import { ChevronLeftIcon } from '@heroicons/react/24/solid';
+import { ChevronLeftIcon, PencilIcon } from '@heroicons/react/24/solid';
+import Badge from '@/features/ui/components/Badge';
+import { useSession } from 'next-auth/react';
 
 export type MarketItemProps = Item;
 
 const MarketItemDetail = () => {
   const router = useRouter();
   const slug = router.query.slug as string;
+  const { data } = useSession();
   const { data: item, isLoading } = api.item.bySlug.useQuery(slug);
   const { mutate } = api.item.view.useMutation();
   const addItem = useAppStore((state) => state.addItem);
@@ -48,17 +51,36 @@ const MarketItemDetail = () => {
         <ChevronLeftIcon width={24} />
         Back
       </Link>
-      <Image
-        priority
-        src={item.image}
-        alt={item.title}
-        width={320}
-        height={320}
-        sizes="100vw"
-        objectFit="cover"
-        className="mx-auto rounded-md"
-      />
-      <div className="text-right mt-1"> sold {item.sold} items</div>
+      <div className="mt-10 relarive">
+        {!item.available && <Badge color="danger">Sold Out</Badge>}
+        {data?.user.id && (
+          <Link
+            href={`/shop/${data.user.id}/${item.id}/edit`}
+            className="bg-pink-100 p-1 rounded-full absolute top-0 right-4 z-10"
+          >
+            <PencilIcon width={16} className="text-pink-500" />
+          </Link>
+        )}
+        <Image
+          priority
+          src={item.image}
+          alt={item.title}
+          width={320}
+          height={320}
+          sizes="100vw"
+          objectFit="cover"
+          className="mx-auto rounded-md"
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="text-left text-sm mt-1">
+          in stock {item.stock} items
+        </div>
+        <div className="text-right mt-1 text-pink-400">
+          sold {item.sold} items
+        </div>
+      </div>
+
       <p className="mt-4 text-lg font-medium line-clamp-2  text-pink-500">
         {item.title}
       </p>
@@ -68,7 +90,12 @@ const MarketItemDetail = () => {
       </p>
       <p className="text-right mt-auto font-medium mb-10">฿{item.price}</p>
 
-      <Button className="mt-1" color="primary" onClick={onBuyItem}>
+      <Button
+        className="mt-1"
+        color="primary"
+        onClick={onBuyItem}
+        disabled={!item.available}
+      >
         Buy
       </Button>
     </div>

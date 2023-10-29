@@ -14,6 +14,11 @@ export const shopItems = z.object({
   content: z.string().refine((val) => validateInput(val), {
     message: 'Should not using special characters',
   }),
+  available: z
+    .string()
+    .transform((val) => val === 'true')
+    .optional(),
+  stock: z.number(),
   price: z.number(),
   image: z.string(),
 });

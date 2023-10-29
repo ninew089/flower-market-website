@@ -32,6 +32,8 @@ model Item {
   price     Int
   image     String
   userId    Int
+  available Boolean @default(true)
+  stock     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
   sold      Int?     @default(0)

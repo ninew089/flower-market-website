@@ -3,6 +3,7 @@ import { Item } from '../types';
 import Image from 'next/image';
 import { PencilIcon } from '@heroicons/react/24/solid';
 import { twMerge } from 'tailwind-merge';
+import Badge from '@/features/ui/components/Badge';
 
 export type MarketItemProps = Item & {
   edit?: boolean;
@@ -18,6 +19,7 @@ const MarketItem = ({
   price,
   edit,
   userId,
+  available,
   className,
 }: MarketItemProps) => {
   return (
@@ -28,6 +30,7 @@ const MarketItem = ({
         className,
       )}
     >
+      {!available && <Badge color="danger">Sold Out</Badge>}
       {edit && userId && (
         <Link
           href={`/shop/${userId}/${id}/edit`}

@@ -19,14 +19,21 @@ const CartList = () => {
       id: item.id,
       total: item.quantity,
     }));
-    if (cartItem.length > 0) {
-      await mutateAsync(cartItem);
-      clearAll();
+    try {
+      if (cartItem.length > 0) {
+        await mutateAsync(cartItem);
+        clearAll();
+        setUiToast({
+          type: 'Success',
+          message: `We've confirmed your payment. Thank you for shopping with us`,
+        });
+        router.push(`/market`);
+      }
+    } catch (error: any) {
       setUiToast({
-        type: 'Success',
-        message: `We've confirmed your payment. Thank you for shopping with us`,
+        type: 'Error',
+        message: error?.message ?? 'Some thing went wrong',
       });
-      router.push(`/market`);
     }
   };
 

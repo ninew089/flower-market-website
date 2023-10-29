@@ -30,7 +30,7 @@ const AddShopItem = () => {
   const productName = watch('title');
   const debouncedValue = useDebounce<string>(productName, 500);
   const updateProfile: SubmitHandler<ShopItemInput> = async (shopItem) => {
-    add({ ...shopItem });
+    add({ ...shopItem, available: 'true' });
   };
 
   useEffect(() => {
@@ -94,6 +94,17 @@ const AddShopItem = () => {
           placeholder="Your Product Price"
           error={errors.price?.message}
           {...register('price', {
+            valueAsNumber: true,
+            validate: (value) => value > 0,
+          })}
+        />
+        <FormField
+          id="stock"
+          label="Stock"
+          type="number"
+          placeholder="Your Stock"
+          error={errors.stock?.message}
+          {...register('stock', {
             valueAsNumber: true,
             validate: (value) => value > 0,
           })}
