@@ -1,5 +1,5 @@
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { type LoginInput, type RegisterUIInput } from '../types';
+import { type RegisterInput } from '../types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as validators from '../helpers/validators';
 import Button from '@/features/ui/components/Button';
@@ -7,7 +7,7 @@ import FormField from '@/features/ui/components/form/FormField';
 import Link from 'next/link';
 
 export type RegisterFormProps = {
-  onSubmit: SubmitHandler<RegisterUIInput>;
+  onSubmit: SubmitHandler<RegisterInput>;
 };
 
 const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
@@ -15,8 +15,8 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterUIInput>({
-    resolver: zodResolver(validators.registerUI),
+  } = useForm<RegisterInput>({
+    resolver: zodResolver(validators.register(false)),
   });
 
   return (
@@ -40,14 +40,14 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
           id="citizenId"
           label="citized ID"
           placeholder="Enter your citized ID"
-          error={errors.email?.message}
+          error={errors.citizenId?.message}
           {...register('citizenId')}
         />
         <FormField
           id="tel"
           label="Tel"
           placeholder="Tel"
-          error={errors.email?.message}
+          error={errors.tel?.message}
           {...register('tel')}
         />
       </div>

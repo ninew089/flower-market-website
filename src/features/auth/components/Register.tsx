@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { type RegisterUIInput } from '../types';
+import { type RegisterInput } from '../types';
 import RegisterForm from './RegisterForm';
 import { api } from '@/utils/api';
 import { aesEncrypt } from '@/utils/encrypt';
@@ -16,7 +16,7 @@ const Register = () => {
       setUiToast({ type: 'Error', message });
     },
   });
-  const submit = (credentials: RegisterUIInput) => {
+  const submit = (credentials: RegisterInput) => {
     register({
       ...credentials,
       citizenId: aesEncrypt(credentials.citizenId),

@@ -5,29 +5,31 @@ import { aesDecrypt, aesEncrypt } from '@/utils/encrypt';
 import { TRPCError } from '@trpc/server';
 
 export const authRouter = createTRPCRouter({
-  register: publicProcedure.input(register).mutation(async ({ input, ctx }) => {
-    const hashedPassword = await bcrypt.hash(input.password, 12);
-    const citizenId = await aesDecrypt(input.citizenId);
-    const user = await ctx.db.user.create({
-      data: {
-        ...input,
-        citizenId: citizenId,
-        password: hashedPassword,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        image: true,
-        tel: true,
-      },
-    });
+  register: publicProcedure
+    .input(register(true))
+    .mutation(async ({ input, ctx }) => {
+      const hashedPassword = await bcrypt.hash(input.password, 12);
+      const citizenId = await aesDecrypt(input.citizenId);
+      const user = await ctx.db.user.create({
+        data: {
+          ...input,
+          citizenId: citizenId,
+          password: hashedPassword,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          image: true,
+          tel: true,
+        },
+      });
 
-    return user;
-  }),
+      return user;
+    }),
   update: protectedProcedure
-    .input(profile)
+    .input(profile(true))
     .mutation(async ({ input: { password, image, ...data }, ctx }) => {
       const id = +ctx.session.user.id;
       try {
@@ -48,10 +50,9 @@ export const authRouter = createTRPCRouter({
             image: true,
           },
         });
+        return profile;
       } catch (error) {
         throw new TRPCError({ code: 'BAD_REQUEST' });
       }
-
-      return profile;
     }),
 });

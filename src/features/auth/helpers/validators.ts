@@ -1,6 +1,10 @@
 import { validateInput } from '@/utils/validate';
 import * as z from 'zod';
 
+const validationTel = (val: string) => {
+  return /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/.test(val);
+};
+
 export const login = z.object({
   email: z.string().email(),
   password: z.string().min(8),
@@ -26,40 +30,36 @@ const citizenId = z
     },
   );
 
-export const registerUI = login.merge(
-  z.object({
-    name: z
-      .string()
-      .min(1)
-      .max(20)
-      .refine((val) => validateInput(val), {
-        message: 'Should not using special characters',
-      }),
-    citizenId: citizenId,
-    tel: z.string().refine((val) => validateInput(val), {
-      message: 'Should not using special characters',
-    }),
-  }),
-);
+const tel = z.string().refine((val) => validationTel(val), {
+  message: 'Invalid telephone number',
+});
 
-export const register = login.merge(
-  z.object({
-    name: z.string().min(1).max(20),
-    citizenId: z.string(),
-    tel: z.string(),
-  }),
-);
-
-export const profile = register
-  .pick({ name: true, email: true })
-  .merge(
+export const register = (isAPI: boolean) =>
+  login.merge(
     z.object({
-      image: z.string(),
-      password: z.preprocess(
-        (v) => (v === '' ? undefined : v),
-        z.string().min(8).optional(),
-      ),
-      tel: z.string(),
+      name: z
+        .string()
+        .min(1)
+        .max(20)
+        .refine((val) => validateInput(val), {
+          message: 'No Spacial Character',
+        }),
+      citizenId: isAPI ? z.string() : citizenId,
+      tel: isAPI ? z.string() : tel,
     }),
-  )
-  .partial();
+  );
+
+export const profile = (isAPI: boolean) =>
+  register(isAPI)
+    .pick({ name: true, email: true })
+    .merge(
+      z.object({
+        image: z.string(),
+        password: z.preprocess(
+          (v) => (v === '' ? undefined : v),
+          z.string().min(8).optional(),
+        ),
+        tel: isAPI ? z.string() : tel,
+      }),
+    )
+    .partial();

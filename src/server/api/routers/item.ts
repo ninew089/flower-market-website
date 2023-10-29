@@ -219,20 +219,10 @@ export const itemRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const items = await ctx.db.item.update({
         where: { id: input.id },
-        data: input.data.title
-          ? {
-              ...input.data,
-              image: input.data.image
-                ? aesEncrypt(input.data.image)
-                : undefined,
-              slug: slugify(input.data.title),
-            }
-          : {
-              ...input.data,
-              image: input.data.image
-                ? aesEncrypt(input.data.image)
-                : undefined,
-            },
+        data: {
+          ...input.data,
+          image: input.data.image ? aesEncrypt(input.data.image) : undefined,
+        },
       });
 
       return items;
@@ -305,6 +295,7 @@ export const itemRouter = createTRPCRouter({
           where: { id: input[i]?.id },
           data: {
             ...item,
+            available: item.stock - (input[i]?.total ?? 0) > 0,
             sold: (item.sold ?? 0) + (input[i]?.total ?? 0),
             stock: item.stock - (input[i]?.total ?? 0),
           },

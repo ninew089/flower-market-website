@@ -24,7 +24,7 @@ const Profile = () => {
     setValue,
     formState: { errors, isValid },
   } = useForm<ProfileInput>({
-    resolver: zodResolver(validators.profile),
+    resolver: zodResolver(validators.profile(false)),
     defaultValues: { image: undefined },
   });
 
