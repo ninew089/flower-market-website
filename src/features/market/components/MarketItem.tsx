@@ -48,7 +48,7 @@ const MarketItem = ({
         height={240}
         sizes="100vw"
         objectFit="cover"
-        className="mx-auto rounded-md"
+        className="mx-auto rounded-md hover:scale-105 transition-all duration-300"
       />
       <p className="mt-4 text-base font-medium line-clamp-2 ">{title}</p>
       <p className="text-right mt-auto font-medium">฿{price}</p>

@@ -17,7 +17,7 @@ const CartItem = ({ name, quantity, image, price, id }: CartItemProps) => {
         height="0"
         sizes="100vw"
         objectFit="cover"
-        className="rounded-md object-cover object-center w-[100px] h-[100px]"
+        className="rounded-md object-cover object-center w-[100px] h-[100px] hover:scale-105 transition-all duration-300"
       />
       <div className="flex flex-col gap-y-3 flex-1">
         <p>{name}</p>

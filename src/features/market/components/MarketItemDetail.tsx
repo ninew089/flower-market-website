@@ -69,7 +69,7 @@ const MarketItemDetail = () => {
           height={320}
           sizes="100vw"
           objectFit="cover"
-          className="mx-auto rounded-md"
+          className="mx-auto rounded-md hover:scale-105 transition-all duration-300"
         />
       </div>
       <div className="flex items-center justify-between">

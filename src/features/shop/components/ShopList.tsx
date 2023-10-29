@@ -43,12 +43,12 @@ const ShopList = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-5">
-      <div className="flex items-center justify-between mb-10">
-        <p className="text-xl pl-5 font-medium"> Market Place</p>
+      <div className="flex  flex-col gap-y-2 lg:flex-row lg:items-center justify-between mb-10">
+        <p className="text-xl pl-5 font-medium">My Shop</p>
         {items.length > 0 && (
           <Button
             color="primary"
-            className="w-fit h-fit"
+            className="w-fit h-fit place-self-end lg:place-self-none"
             onClick={() => router.push(`/shop/${userId}/add`)}
           >
             Add your Flower

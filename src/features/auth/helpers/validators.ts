@@ -1,8 +1,11 @@
-import { validateInput } from '@/utils/validate';
 import * as z from 'zod';
 
-const validationTel = (val: string) => {
+export const validationTel = (val: string) => {
   return /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/.test(val);
+};
+
+export const validateInput = (val: string) => {
+  return /^[^=+\@|>%<]*$/.test(val);
 };
 
 export const login = z.object({
@@ -15,7 +18,7 @@ const citizenId = z
   .min(13)
   .max(13)
   .refine((id) => id.length === 13, {
-    message: 'valid critizen ID',
+    message: 'Invalid critizen ID',
   })
   .refine(
     (id) => {
@@ -26,7 +29,7 @@ const citizenId = z
       return (11 - (sum % 11)) % 10 === parseFloat(id.charAt(12));
     },
     {
-      message: 'valid critizen ID',
+      message: 'Invalid critizen ID',
     },
   );
 
@@ -42,7 +45,7 @@ export const register = (isAPI: boolean) =>
         .min(1)
         .max(20)
         .refine((val) => validateInput(val), {
-          message: 'No Spacial Character',
+          message: 'Should not using special characters',
         }),
       citizenId: isAPI ? z.string() : citizenId,
       tel: isAPI ? z.string() : tel,
