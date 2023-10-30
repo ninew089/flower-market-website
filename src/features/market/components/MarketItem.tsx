@@ -19,6 +19,7 @@ const MarketItem = ({
   price,
   edit,
   userId,
+  sold,
   available,
   className,
 }: MarketItemProps) => {
@@ -50,8 +51,11 @@ const MarketItem = ({
         objectFit="cover"
         className="mx-auto rounded-md hover:scale-105 transition-all duration-300"
       />
-      <p className="mt-4 text-base font-medium line-clamp-2 ">{title}</p>
-      <p className="text-right mt-auto font-medium">฿{price}</p>
+      <p className="mt-auto   text-base font-medium line-clamp-2 ">{title}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-right  font-medium">฿{price}</p>
+        <p className="text-right text-xs  font-medium">Sold {sold} items</p>
+      </div>
     </Link>
   );
 };

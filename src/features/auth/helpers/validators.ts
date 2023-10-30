@@ -7,10 +7,15 @@ export const validationTel = (val: string) => {
 export const validateInput = (val: string) => {
   return /^[^=+\@|>%<]*$/.test(val);
 };
+export const validatePassword = (val: string) => {
+  return new RegExp(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/,
+  ).test(val);
+};
 
 export const login = z.object({
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string(),
 });
 
 const citizenId = z
@@ -60,9 +65,30 @@ export const profile = (isAPI: boolean) =>
         image: z.string(),
         password: z.preprocess(
           (v) => (v === '' ? undefined : v),
-          z.string().min(8).optional(),
+          z
+            .string()
+            .min(8)
+            .refine((val) => validatePassword(val), {
+              message: '',
+              path: ['password'],
+            })
+            .optional(),
         ),
         tel: isAPI ? z.string() : tel,
       }),
     )
     .partial();
+
+export const changePassword = z
+  .object({
+    currentPassword: z.string(),
+    password: z.string().refine((val) => validatePassword(val), {
+      message: '',
+      path: ['password'],
+    }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Password doesn’t match',
+    path: ['confirmPassword'], // path of error
+  });

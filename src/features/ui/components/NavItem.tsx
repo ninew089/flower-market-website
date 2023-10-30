@@ -17,7 +17,7 @@ const NavItem = ({ className, children, ...props }: NavItemProps) => {
   const isActive =
     'to' in props && props.to === '/'
       ? router.pathname === props.to
-      : router.pathname.startsWith(props.to);
+      : 'to' in props && router.pathname.startsWith(props.to);
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
     'onClick' in props ? props.onClick(e) : void router.push(props.to);

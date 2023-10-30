@@ -9,7 +9,7 @@ import Button from '@/features/ui/components/Button';
 import { api } from '@/utils/api';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/utils/hooks/useDebounce';
 import { makeSlug } from '../helpers/slug';
 
 const AddShopItem = () => {

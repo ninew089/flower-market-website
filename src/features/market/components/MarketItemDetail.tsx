@@ -86,17 +86,20 @@ const MarketItemDetail = () => {
       </p>
       <p className="text-sm font-medium line-clamp-2 ">{item.content}</p>
       <p className="text-right font-medium mb-10 mt-2">
-        post by <span className="text-pink-500">{item.name}</span>
+        post by{' '}
+        <Link href={`/shop/${item.userId}`} className="text-pink-500">
+          {item.name}
+        </Link>
       </p>
       <p className="text-right mt-auto font-medium mb-10">฿{item.price}</p>
 
       <Button
         className="mt-1"
-        color="primary"
+        color={!item.available ? 'default' : 'primary'}
         onClick={onBuyItem}
         disabled={!item.available}
       >
-        Buy
+        {!item.available ? 'Sold Out' : 'Buy'}
       </Button>
     </div>
   );

@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs';
-import { profile, register } from '@/features/auth/helpers/validators';
+import * as validators from '@/features/auth/helpers/validators';
 import { createTRPCRouter, publicProcedure, protectedProcedure } from '../trpc';
 import { aesDecrypt, aesEncrypt } from '@/utils/encrypt';
 import { TRPCError } from '@trpc/server';
 
 export const authRouter = createTRPCRouter({
   register: publicProcedure
-    .input(register(true))
+    .input(validators.register(true))
     .mutation(async ({ input, ctx }) => {
       const hashedPassword = await bcrypt.hash(input.password, 12);
       const citizenId = await aesDecrypt(input.citizenId);
@@ -29,7 +29,7 @@ export const authRouter = createTRPCRouter({
       return user;
     }),
   update: protectedProcedure
-    .input(profile(true))
+    .input(validators.profile(true))
     .mutation(async ({ input: { password, image, ...data }, ctx }) => {
       const id = +ctx.session.user.id;
       try {

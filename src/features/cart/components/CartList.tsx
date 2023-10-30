@@ -14,6 +14,10 @@ const CartList = () => {
   const router = useRouter();
   const total = useMemo(() => getTotal(), [getTotal, cartList]);
   const { mutateAsync, isLoading } = api.item.buy.useMutation();
+  const listIdCart = cartList.map((x) => x.id);
+  const { data: listStock, isLoading: isLoadStock } =
+    api.item.findStockList.useQuery(listIdCart);
+
   const onBuy = async () => {
     const cartItem = cartList.map((item) => ({
       id: item.id,
@@ -42,7 +46,11 @@ const CartList = () => {
       <p className="text-xl pl-5 font-medium mb-10"> My Cart</p>
       <div className="flex flex-col gap-y-6">
         {cartList.map((item, index) => (
-          <CartItem key={item.id} {...item}></CartItem>
+          <CartItem
+            key={item.id}
+            {...item}
+            stock={listStock?.[index]?.stock ?? 0}
+          ></CartItem>
         ))}
         {cartList.length > 0 && (
           <div className="flex flex-col items-end">

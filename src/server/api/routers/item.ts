@@ -6,7 +6,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from '@/server/api/trpc';
-import { shopItems } from '@/features/shop/helpers/validators';
+import * as validators from '@/features/shop/helpers/validators';
 import { aesDecrypt, aesEncrypt } from '@/utils/encrypt';
 import Fuse from 'fuse.js';
 
@@ -24,6 +24,7 @@ export const itemRouter = createTRPCRouter({
           price: true,
           available: true,
           stock: true,
+          sold: true,
         },
         orderBy: {
           updatedAt: 'desc',
@@ -57,7 +58,7 @@ export const itemRouter = createTRPCRouter({
           stock: true,
         },
         orderBy: {
-          updatedAt: 'desc',
+          id: 'asc',
         },
       });
 
@@ -76,6 +77,7 @@ export const itemRouter = createTRPCRouter({
         price: true,
         available: true,
         stock: true,
+        sold: true,
       },
       orderBy: {
         sold: 'desc',
@@ -89,31 +91,38 @@ export const itemRouter = createTRPCRouter({
 
     return decryptedItems;
   }),
-  byUserId: protectedProcedure
-    .input(z.number())
-    .query(async ({ input, ctx }) => {
-      const items = await ctx.db.item.findMany({
-        where: { userId: input },
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          image: true,
-          price: true,
-          available: true,
-          stock: true,
-        },
-      });
-      if (items === null) {
-        throw new TRPCError({ code: 'NOT_FOUND' });
-      }
-      const decryptedItems = items.map((item) => ({
-        ...item,
-        image: aesDecrypt(item.image),
-      }));
+  byUserId: publicProcedure.input(z.number()).query(async ({ input, ctx }) => {
+    const items = await ctx.db.item.findMany({
+      where: { userId: input },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        image: true,
+        price: true,
+        available: true,
+        stock: true,
+        sold: true,
+      },
+    });
+    const shopName = await ctx.db.user.findUnique({
+      where: { id: input },
+      select: {
+        name: true,
+        id: true,
+        image: true,
+      },
+    });
+    if (items === null) {
+      throw new TRPCError({ code: 'NOT_FOUND' });
+    }
+    const decryptedItems = items.map((item) => ({
+      ...item,
+      image: aesDecrypt(item.image),
+    }));
 
-      return decryptedItems;
-    }),
+    return { items: decryptedItems, shopInfo: shopName };
+  }),
   byUserIdWithStatic: protectedProcedure
     .input(z.number())
     .query(async ({ input, ctx }) => {
@@ -199,21 +208,23 @@ export const itemRouter = createTRPCRouter({
 
     return { ...items, image: aesDecrypt(items.image), name: userInfo?.name };
   }),
-  add: protectedProcedure.input(shopItems).mutation(async ({ input, ctx }) => {
-    await ctx.db.item.create({
-      data: {
-        ...input,
-        image: aesEncrypt(input.image),
-        slug: slugify(input.slug),
-        userId: +ctx.session.user.id,
-      },
-    });
-  }),
+  add: protectedProcedure
+    .input(validators.shopItems)
+    .mutation(async ({ input, ctx }) => {
+      await ctx.db.item.create({
+        data: {
+          ...input,
+          image: aesEncrypt(input.image),
+          slug: slugify(input.slug),
+          userId: +ctx.session.user.id,
+        },
+      });
+    }),
   update: protectedProcedure
     .input(
       z.object({
         id: z.number(),
-        data: shopItems.partial(),
+        data: validators.shopItems.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {

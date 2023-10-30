@@ -3,7 +3,14 @@ import Image from 'next/image';
 import { TrashIcon } from '@heroicons/react/24/solid';
 import { useAppStore } from '@/features/store';
 
-const CartItem = ({ name, quantity, image, price, id }: CartItemProps) => {
+const CartItem = ({
+  name,
+  quantity,
+  image,
+  price,
+  id,
+  stock,
+}: CartItemProps & { stock: number }) => {
   const add = useAppStore((state) => state.addItem);
   const remove = useAppStore((state) => state.removeItem);
   const clearCart = useAppStore((state) => state.clearCart);
@@ -25,19 +32,16 @@ const CartItem = ({ name, quantity, image, price, id }: CartItemProps) => {
           <p
             className="w-6 h-6 bg-gray-100 flex justify-center items-center rounded-sm cursor-pointer"
             onClick={() => {
-              add({ name, quantity: 1, image, price, id });
+              quantity < stock && add({ name, quantity: 1, image, price, id });
             }}
           >
             +
           </p>
-          <div className="w-8 flex items-center justify-center">
-            {' '}
-            {quantity}
-          </div>
+          <div className="w-8 flex items-center justify-center">{quantity}</div>
           <p
             className="w-6 h-6 bg-gray-100 flex justify-center items-center rounded-sm cursor-pointer"
             onClick={() => {
-              if (quantity > 0) remove(id, 1);
+              remove(id, quantity);
             }}
           >
             -

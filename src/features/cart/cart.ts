@@ -27,30 +27,29 @@ export const createCartSlice: AppSliceCreator<CartSlice> = (set, get) => {
         const existingItem = prev.find((x) => x.id === item.id);
         const itemList = prev.filter((x) => x.id !== item.id);
         const existing = { ...existingItem } as CartItem;
-        if (existing.quantity) {
-          console.log('add old');
+        if (existing.id) {
           existing.quantity += item.quantity;
           state.items = [...itemList, existing].sort((a, b) => a.id - b.id);
         } else {
-          console.log('add new');
           state.items = [...state.items, item].sort((a, b) => a.id - b.id);
         }
       });
     },
 
-    removeItem: (itemId: number, quantity: number) => {
+    removeItem: (itemId: number, stock: number) => {
       set((state) => {
         const prev = [...state.items];
         const existingItem = prev.find((x) => x.id === itemId);
         const itemList = prev.filter((x) => x.id !== itemId);
         const existing = { ...existingItem } as CartItem;
-        if (existing.quantity) {
-          console.log('add old');
-          existing.quantity -= quantity;
+        if (existing.id && existing.quantity > 1) {
+          existing.quantity = existing.quantity - 1;
           state.items = [...itemList, existing].sort((a, b) => a.id - b.id);
+          return;
         }
-        if (existing.quantity === 1) {
+        if (existing.quantity <= 1 || stock <= 0) {
           state.items = itemList;
+          return;
         }
       });
     },

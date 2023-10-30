@@ -2,18 +2,23 @@ import MarketItem from '@/features/market/components/MarketItem';
 import Button from '@/features/ui/components/Button';
 import Loading from '@/features/ui/components/Loading';
 import { api } from '@/utils/api';
+import { aesDecrypt } from '@/utils/encrypt';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 const ShopList = () => {
   const router = useRouter();
+  const { data } = useSession();
   const userId = router.query.userId as string;
+
+  const { data: dataShop, isLoading } = api.item.byUserId.useQuery(+userId);
+
+  console.log(dataShop);
+  const isMyShop = data?.user.id === userId;
   if (typeof userId === 'undefined') return <div>Not found.</div>;
-
-  const { data: items, isLoading } = api.item.byUserId.useQuery(+userId);
-
   if (isLoading) return <Loading></Loading>;
-  if (!items)
+  if (!dataShop)
     return (
       <div className="flex flex-col items-center justify-center gap-4 mt-20">
         <Image
@@ -44,8 +49,22 @@ const ShopList = () => {
   return (
     <div className="mx-auto max-w-7xl px-5">
       <div className="flex  flex-col gap-y-2 lg:flex-row lg:items-center justify-between mb-10">
-        <p className="text-xl pl-5 font-medium">My Shop</p>
-        {items.length > 0 && (
+        <div className="flex">
+          {dataShop.shopInfo?.image && (
+            <Image
+              priority
+              src={`/uploads/${aesDecrypt(dataShop.shopInfo.image)}`}
+              alt="logo"
+              width={50}
+              height={50}
+              className="w-[50px] h-[50px] rounded-full object-cover object-center "
+            />
+          )}
+          <p className="text-xl pl-5 font-medium">
+            {`Shop ${dataShop.shopInfo?.name}`}
+          </p>
+        </div>
+        {isMyShop && dataShop.items.length > 0 && (
           <Button
             color="primary"
             className="w-fit h-fit place-self-end lg:place-self-none"
@@ -55,7 +74,7 @@ const ShopList = () => {
           </Button>
         )}
       </div>
-      {items.length === 0 && (
+      {dataShop.items.length === 0 && (
         <div className="flex flex-col items-center justify-center gap-4 mt-20">
           <Image
             priority
@@ -82,8 +101,8 @@ const ShopList = () => {
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
-        {items.map((item) => (
-          <MarketItem key={item.id} {...item} edit userId={userId}></MarketItem>
+        {dataShop.items.map((item) => (
+          <MarketItem key={item.id} {...item} edit={isMyShop} userId={userId} />
         ))}
       </div>
     </div>

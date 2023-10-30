@@ -4,11 +4,7 @@ import ShopList from '@/features/shop/components/ShopList';
 import ProtectedRoute from '@/features/auth/guard/ProtectedRote';
 
 const IndexPage: NextPageWithLayout = () => {
-  return (
-    <ProtectedRoute>
-      <ShopList></ShopList>
-    </ProtectedRoute>
-  );
+  return <ShopList></ShopList>;
 };
 
 IndexPage.getLayout = Layout;

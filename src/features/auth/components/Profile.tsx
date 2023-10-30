@@ -89,12 +89,21 @@ const Profile = () => {
           {...register('email')}
         ></FormField>
         <FormField
-          id="name"
+          id="tel"
           label="Tel"
           placeholder="Your Tel name"
           error={errors.name?.message}
           {...register('tel')}
         ></FormField>
+
+        {/* <FormField
+          id="password"
+          label="Password"
+          type="password"
+          placeholder="Update your password"
+          error={errors.password?.message}
+          {...register('password')}
+        ></FormField> */}
 
         <Button
           type="submit"
