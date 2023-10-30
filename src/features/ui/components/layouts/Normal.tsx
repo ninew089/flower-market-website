@@ -22,9 +22,9 @@ const Layout = ({ children }: LayoutProps) => {
     <>
       <Navbar>
         <Navbar.Navbrand></Navbar.Navbrand>
+        <div className="flex-1" />
         <Navbar.NavItem to="/">Home</Navbar.NavItem>
         <Navbar.NavItem to="/market">Market Place</Navbar.NavItem>
-        <div className="flex-1" />
         <ProtectedResource>
           <AuthMenu />
         </ProtectedResource>

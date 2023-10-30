@@ -12,6 +12,8 @@ import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import * as validators from '../helpers/validators';
 import { type ProfileInput } from '../types';
+import Link from 'next/link';
+import { LockClosedIcon } from '@heroicons/react/24/solid';
 
 const Profile = () => {
   const router = useRouter();
@@ -73,6 +75,7 @@ const Profile = () => {
             error={errors.image?.message}
           ></AvatarUploader>
         </div>
+
         <FormField
           id="name"
           label="Name"
@@ -95,25 +98,23 @@ const Profile = () => {
           error={errors.name?.message}
           {...register('tel')}
         ></FormField>
-
-        {/* <FormField
-          id="password"
-          label="Password"
-          type="password"
-          placeholder="Update your password"
-          error={errors.password?.message}
-          {...register('password')}
-        ></FormField> */}
-
         <Button
           type="submit"
           align="center"
+          className="w-full"
           color={isValid ? 'primary' : 'default'}
           disabled={!isValid}
         >
           Update Profile
         </Button>
       </form>
+      <p className="mt-10 mb-6 ">Settings</p>
+      <Link
+        href="/auth/change-password"
+        className={`text-gray-900 group flex w-full rounded-md px-2 py-2 text-sm  gap-x-1 items-center border border-black/50`}
+      >
+        <LockClosedIcon width={16} /> Change Password
+      </Link>
     </div>
   );
 };

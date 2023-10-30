@@ -81,7 +81,6 @@ export const profile = (isAPI: boolean) =>
 
 export const changePassword = z
   .object({
-    currentPassword: z.string(),
     password: z.string().refine((val) => validatePassword(val), {
       message: '',
       path: ['password'],
