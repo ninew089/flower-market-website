@@ -61,7 +61,7 @@ const EditShopItem = () => {
   if (isLoading) return <Loading></Loading>;
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-lg px-5">
       <form onSubmit={handleSubmit(updateProfile)}>
         <div className="center mx-auto py-3">
           <FlowerUploader

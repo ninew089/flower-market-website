@@ -46,7 +46,7 @@ const AddShopItem = () => {
   }, [debouncedValue]);
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-lg px-5">
       <p className="text-xl pl-5 font-medium mb-10">Add Your Flower</p>
       <form onSubmit={handleSubmit(updateProfile)}>
         <div className="center mx-auto py-3">
