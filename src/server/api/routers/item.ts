@@ -18,7 +18,7 @@ export const itemRouter = createTRPCRouter({
       const items = await ctx.db.item.findMany({
         select: {
           id: true,
-          title: true,
+          productName: true,
           slug: true,
           image: true,
           price: true,
@@ -36,7 +36,7 @@ export const itemRouter = createTRPCRouter({
         image: aesDecrypt(item.image),
       }));
       const fuse = new Fuse(decryptedItems, {
-        keys: ['title', 'slug', 'id'],
+        keys: ['productName', 'slug', 'id'],
         threshold: 0.3,
       });
 
@@ -71,7 +71,7 @@ export const itemRouter = createTRPCRouter({
       },
       select: {
         id: true,
-        title: true,
+        productName: true,
         slug: true,
         image: true,
         price: true,
@@ -97,7 +97,7 @@ export const itemRouter = createTRPCRouter({
       select: {
         id: true,
         slug: true,
-        title: true,
+        productName: true,
         image: true,
         price: true,
         available: true,
@@ -131,7 +131,7 @@ export const itemRouter = createTRPCRouter({
         select: {
           id: true,
           slug: true,
-          title: true,
+          productName: true,
           image: true,
           price: true,
           viewer: true,
@@ -164,7 +164,7 @@ export const itemRouter = createTRPCRouter({
       select: {
         id: true,
         slug: true,
-        title: true,
+        productName: true,
         image: true,
         price: true,
         sold: true,
@@ -185,7 +185,7 @@ export const itemRouter = createTRPCRouter({
       select: {
         id: true,
         slug: true,
-        title: true,
+        productName: true,
         image: true,
         price: true,
         sold: true,
@@ -295,7 +295,7 @@ export const itemRouter = createTRPCRouter({
         await ctx.db.sale.create({
           data: {
             itemId: +item.id,
-            itemName: item.title,
+            itemName: item.productName,
             userId: +item.userId,
             quantity: input[i]?.total ?? 0,
             price: (input[i]?.total ?? 0) * item.price,

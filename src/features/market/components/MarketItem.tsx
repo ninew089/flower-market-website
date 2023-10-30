@@ -14,7 +14,7 @@ export type MarketItemProps = Item & {
 const MarketItem = ({
   id,
   slug,
-  title,
+  productName,
   image,
   price,
   edit,
@@ -44,14 +44,16 @@ const MarketItem = ({
       <Image
         priority
         src={image}
-        alt={title}
+        alt={productName}
         width={240}
         height={240}
         sizes="100vw"
         objectFit="cover"
         className="mx-auto rounded-md hover:scale-105 transition-all duration-300"
       />
-      <p className="mt-auto   text-base font-medium line-clamp-2 ">{title}</p>
+      <p className="mt-auto   text-base font-medium line-clamp-2 ">
+        {productName}
+      </p>
       <div className="flex items-center justify-between mt-2">
         <p className="text-right  font-medium text-pink-700">฿{price}</p>
         <p className="text-right text-xs">Sold {sold} items</p>

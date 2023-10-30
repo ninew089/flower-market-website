@@ -36,7 +36,7 @@ const EditShopItem = () => {
 
   useEffect(() => {
     if (typeof item !== 'undefined' && item !== null) {
-      setValue('title', item.title);
+      setValue('productName', item.productName);
       setValue('content', item.content);
       setValue('excerpt', item.excerpt);
       setValue('image', item.image);
@@ -73,11 +73,11 @@ const EditShopItem = () => {
           ></FlowerUploader>
         </div>
         <FormField
-          id="title"
+          id="productName"
           label="Product Name"
           placeholder="Your Product Name"
-          error={errors.title?.message}
-          {...register('title')}
+          error={errors.productName?.message}
+          {...register('productName')}
         />
         <FormField
           id="excerpt"

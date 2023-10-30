@@ -1,11 +1,8 @@
 import { db } from '@/server/db';
-import { faker } from '@faker-js/faker';
-import { type Prisma } from '@prisma/client';
-import { slugify } from '@/features/shared/helpers/slugify';
-import { aesEncrypt } from '@/utils/encrypt';
 
 async function main() {
-  // Create Admin
+  //Seed Data
+  //Create Admin
   // const admin = await db.user.upsert({
   //   where: { email: 'jittanan.jck@gmail.com' },
   //   update: {},
@@ -65,7 +62,6 @@ async function main() {
   //     update: {},
   //     create: createItmesInput,
   //   });
-  // }
 }
 
 main()

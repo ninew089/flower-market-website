@@ -2,7 +2,7 @@ import { validateInput } from '@/features/auth/helpers/validators';
 import * as z from 'zod';
 
 export const shopItems = z.object({
-  title: z.string().refine((val) => validateInput(val), {
+  productName: z.string().refine((val) => validateInput(val), {
     message: 'Should not using special characters',
   }),
   slug: z.string().refine((val) => validateInput(val), {

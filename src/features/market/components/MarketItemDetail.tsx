@@ -34,7 +34,7 @@ const MarketItemDetail = () => {
   const onBuyItem = () => {
     addItem({
       id: item.id,
-      name: item.title,
+      name: item.productName,
       price: item.price,
       image: item.image,
       quantity: 1,
@@ -64,7 +64,7 @@ const MarketItemDetail = () => {
         <Image
           priority
           src={item.image}
-          alt={item.title}
+          alt={item.productName}
           width={320}
           height={320}
           sizes="100vw"
@@ -82,7 +82,7 @@ const MarketItemDetail = () => {
       </div>
 
       <p className="mt-4 text-lg font-medium line-clamp-2  text-pink-500">
-        {item.title}
+        {item.productName}
       </p>
       <p className="text-sm font-medium line-clamp-2 ">{item.content}</p>
       <p className="text-right font-medium mb-10 mt-2">

@@ -6,7 +6,7 @@ export type ShopStaticCardProps = ShopStaticItem;
 
 const ShopStaticCard = ({
   id,
-  title,
+  productName,
   image,
   price,
   sold,
@@ -17,14 +17,14 @@ const ShopStaticCard = ({
       <Image
         priority
         src={image}
-        alt={title}
+        alt={productName}
         width="0"
         height="0"
         sizes="100vw"
         objectFit="cover"
         className=" rounded-md object-cover object-center w-8 h-8"
       />
-      <p className="text-base font-medium w-[80px] truncate">{title}</p>
+      <p className="text-base font-medium w-[80px] truncate">{productName}</p>
       <p className="font-medium w-[50px]">฿{price}</p>
       <div className="flex-1 ml-5">
         <p className="font-medium text-xs text-gray-500">sold</p>

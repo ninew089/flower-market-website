@@ -27,7 +27,7 @@ const AddShopItem = () => {
     defaultValues: { image: undefined },
   });
 
-  const productName = watch('title');
+  const productName = watch('productName');
   const debouncedValue = useDebounce<string>(productName, 500);
   const updateProfile: SubmitHandler<ShopItemInput> = async (shopItem) => {
     add({ ...shopItem, available: 'true' });
@@ -59,11 +59,11 @@ const AddShopItem = () => {
           ></FlowerUploader>
         </div>
         <FormField
-          id="title"
+          id="productName"
           label="Product Name"
           placeholder="Your Product Name"
-          error={errors.title?.message}
-          {...register('title')}
+          error={errors.productName?.message}
+          {...register('productName')}
         />
         <FormField
           id="excerpt"
