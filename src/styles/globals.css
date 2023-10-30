@@ -4,3 +4,32 @@
 @import '../features/ui/components/Button.css';
 
 @import 'tailwindcss/utilities';
+
+.marquee {
+  /*   overflow: hidden; */
+}
+
+.marquee-content {
+  display: flex;
+  animation: scrolling 10s linear infinite;
+}
+
+.marquee-item {
+  flex: 0 0 200px;
+  margin: 0 10px;
+}
+
+.marquee-item img {
+  display: block;
+  width: 100%;
+  /*   padding: 0 20px; */
+}
+
+@keyframes scrolling {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translatex(-144vw);
+  }
+}

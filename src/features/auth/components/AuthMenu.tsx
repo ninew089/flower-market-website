@@ -63,7 +63,7 @@ export default function AuthMenu() {
                       <Link
                         href={`/shop/${session.user.id}`}
                         className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         <ShoppingCartIcon
@@ -79,7 +79,7 @@ export default function AuthMenu() {
                       <Link
                         href={`/shop/${session.user.id}/static`}
                         className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         <Bars3BottomLeftIcon
@@ -95,7 +95,7 @@ export default function AuthMenu() {
                       <Link
                         href="/auth/profile"
                         className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         {active ? (
@@ -119,7 +119,7 @@ export default function AuthMenu() {
                       <button
                         onClick={() => signOut({ callbackUrl: '/market' })}
                         className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         {active ? (
@@ -146,7 +146,7 @@ export default function AuthMenu() {
                       <Link
                         href="/auth/sign-up"
                         className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         {active ? (
@@ -169,7 +169,7 @@ export default function AuthMenu() {
                       <Link
                         href="/auth/sign-in"
                         className={`${
-                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
                         } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         {active ? (

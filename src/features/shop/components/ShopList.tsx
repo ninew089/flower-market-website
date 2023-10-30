@@ -14,7 +14,6 @@ const ShopList = () => {
 
   const { data: dataShop, isLoading } = api.item.byUserId.useQuery(+userId);
 
-  console.log(dataShop);
   const isMyShop = data?.user.id === userId;
   if (typeof userId === 'undefined') return <div>Not found.</div>;
   if (isLoading) return <Loading></Loading>;

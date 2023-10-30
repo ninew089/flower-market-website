@@ -31,6 +31,25 @@ const IndexPage: NextPageWithLayout = () => {
           Get Start 🌼
         </Button>
       </div>
+
+      <div className="marquee mt-20 max-w-7xl mx-auto  overflow-hidden">
+        <div className="marquee-content">
+          {[
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5,
+            6, 7, 8, 9,
+          ].map((x) => (
+            <div className="marquee-item" key={x}>
+              <Image
+                src={`/assets/images/${x}.jpg`}
+                alt={'imgae' + x}
+                width={200}
+                height={200}
+                className="h-[200px] w-[200px] object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

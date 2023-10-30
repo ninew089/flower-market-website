@@ -19,11 +19,13 @@ const MarketList = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-5">
-      <p className="text-xl pl-5 font-medium mb-10">Recommend For You</p>
+      <p className="text-xl pl-5 font-medium mb-10 text-pink-500">
+        Recommend For You
+      </p>
       {isLoadRecommendItems ? (
         <Loading></Loading>
       ) : (
-        <div className="flex flex-row snap-x scroll-smooth md:scroll-auto overflow-x-auto gap-x-6">
+        <div className="flex flex-row snap-x scroll-smooth md:scroll-auto overflow-x-auto gap-x-6 py-4">
           {recommendItems?.map((item, index) => (
             <MarketItem
               key={item.id}
@@ -34,8 +36,10 @@ const MarketList = () => {
         </div>
       )}
 
-      <div className="flex  flex-col lg:flex-row justify-between items-center mt-10">
-        <p className="text-xl pl-5 font-medium mb-10"> Market Place</p>
+      <div className="flex  flex-col lg:flex-row justify-between items-center my-20">
+        <p className="text-xl pl-5 font-medium mb-10 text-pink-500">
+          Market Place
+        </p>
         <input
           onChange={(e) => setSearch(e.target.value)}
           placeholder={'Search your flower...'}

@@ -35,7 +35,7 @@ const MarketItem = ({
       {edit && userId && (
         <Link
           href={`/shop/${userId}/${id}/edit`}
-          className="bg-pink-100 p-1 rounded-full absolute top-0 right-4 z-10"
+          className="bg-pink-100 p-1 rounded-full absolute top-0 right-4 z-10 hover:scale-110 transition-all duration-300"
         >
           <PencilIcon width={16} className="text-pink-500" />
         </Link>
@@ -52,9 +52,9 @@ const MarketItem = ({
         className="mx-auto rounded-md hover:scale-105 transition-all duration-300"
       />
       <p className="mt-auto   text-base font-medium line-clamp-2 ">{title}</p>
-      <div className="flex items-center justify-between">
-        <p className="text-right  font-medium">฿{price}</p>
-        <p className="text-right text-xs  font-medium">Sold {sold} items</p>
+      <div className="flex items-center justify-between mt-2">
+        <p className="text-right  font-medium text-pink-700">฿{price}</p>
+        <p className="text-right text-xs">Sold {sold} items</p>
       </div>
     </Link>
   );

@@ -26,7 +26,7 @@ const AddShopItem = () => {
     resolver: zodResolver(validators.shopItems),
     defaultValues: { image: undefined },
   });
-  console.log(errors);
+
   const productName = watch('title');
   const debouncedValue = useDebounce<string>(productName, 500);
   const updateProfile: SubmitHandler<ShopItemInput> = async (shopItem) => {

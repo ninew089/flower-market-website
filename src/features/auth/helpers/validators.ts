@@ -15,7 +15,10 @@ export const validatePassword = (val: string) => {
 
 export const login = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().refine((val) => validatePassword(val), {
+    message:
+      'The password must include uppercase and lowercase letters, numbers, and symbols',
+  }),
 });
 
 const citizenId = z
@@ -69,8 +72,8 @@ export const profile = (isAPI: boolean) =>
             .string()
             .min(8)
             .refine((val) => validatePassword(val), {
-              message: '',
-              path: ['password'],
+              message:
+                'The password must include uppercase and lowercase letters, numbers, and symbols',
             })
             .optional(),
         ),
@@ -82,8 +85,8 @@ export const profile = (isAPI: boolean) =>
 export const changePassword = z
   .object({
     password: z.string().refine((val) => validatePassword(val), {
-      message: '',
-      path: ['password'],
+      message:
+        'The password must include uppercase and lowercase letters, numbers, and symbols',
     }),
     confirmPassword: z.string(),
   })
