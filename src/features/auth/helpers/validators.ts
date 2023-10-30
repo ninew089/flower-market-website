@@ -94,3 +94,12 @@ export const changePassword = z
     message: 'Password doesn’t match',
     path: ['confirmPassword'], // path of error
   });
+
+export const forgotPassword = (isAPI: boolean) =>
+  login
+    .merge(
+      z.object({
+        citizenId: isAPI ? z.string() : citizenId,
+      }),
+    )
+    .and(changePassword);
