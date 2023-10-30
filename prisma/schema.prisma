@@ -24,22 +24,22 @@ model User {
 }
 
 model Item {
-  id        Int      @id @default(autoincrement())
-  productName     String
-  slug      String   @unique
-  excerpt   String
-  content   String
-  price     Int
-  image     String
-  userId    Int
-  available Boolean @default(true)
-  stock     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  sold      Int?     @default(0)
-  viewer    Int?     @default(0)
-  user      User     @relation(fields: [userId], references: [id])
-  sale      Sale[]
+  id          Int      @id @default(autoincrement())
+  productName String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  price       Int
+  image       String
+  userId      Int
+  available   Boolean  @default(true)
+  stock       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  sold        Int?     @default(0)
+  viewer      Int?     @default(0)
+  user        User     @relation(fields: [userId], references: [id])
+  sale        Sale[]
 }
 
 model Sale {
