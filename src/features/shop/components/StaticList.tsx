@@ -94,7 +94,7 @@ const StaticList = () => {
   return (
     <div className="max-w-3xl mx-auto px-5">
       <div className="flex items-center justify-between mb-10">
-        <p className="text-xl pl-5 font-medium">Static</p>
+        <p className="text-xl pl-5 font-medium">Statistics</p>
       </div>
       <p className="text-xl pl-5 font-medium mb-10">
         Total Sell: ฿{items.totalSell}
