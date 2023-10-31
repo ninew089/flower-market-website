@@ -10,6 +10,7 @@ import { api } from '@/utils/api';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Loading from '@/features/ui/components/Loading';
+import { getImagePath } from '@/features/shared/helpers/upload';
 
 const EditShopItem = () => {
   const router = useRouter();
@@ -67,7 +68,7 @@ const EditShopItem = () => {
           <FlowerUploader
             defaultImage={item?.image ?? '/assets/images/avatar.png'}
             onImageChanged={(image) => {
-              setValue('image', '/uploads/' + image, { shouldValidate: true });
+              setValue('image', getImagePath(image), { shouldValidate: true });
             }}
             error={errors.image?.message}
           ></FlowerUploader>

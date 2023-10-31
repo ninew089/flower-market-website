@@ -17,7 +17,10 @@ export function aesEncrypt(word: string) {
   return encData;
 }
 
-export function aesDecrypt(word: string) {
+export function aesDecrypt(word: string): string;
+export function aesDecrypt(word?: null): undefined;
+export function aesDecrypt(word?: string | null) {
+  if (!word) return;
   const decData = CryptoJS.enc.Base64.parse(word).toString(CryptoJS.enc.Utf8);
   const bytes = CryptoJS.AES.decrypt(decData, env.NEXT_PUBLIC_AES_KEY, {
     iv: CryptoJS.enc.Utf8.parse(env.NEXT_PUBLIC_AES_IV), // parse the IV

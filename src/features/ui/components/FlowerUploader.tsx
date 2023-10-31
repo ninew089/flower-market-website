@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { type ChangeEventHandler, useState } from 'react';
 import { ACCEPTED_IMAGE_TYPES } from '../helpers/validators';
 import Loading from './Loading';
+import { getImagePath } from '@/features/shared/helpers/upload';
 
 export interface FlowerUploaderProps {
   defaultImage?: string;
@@ -45,7 +46,7 @@ const FlowerUploader = ({
 
     setIsButtonDisabled(true);
     const filename = await uploadImage(image);
-    previewAvatar(`/uploads/${filename}`);
+    previewAvatar(getImagePath(filename));
     onImageChanged(filename);
   };
 

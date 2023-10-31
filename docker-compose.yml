@@ -1,44 +1,44 @@
-# version: '3.9'
-# services:
-#   db:
-#     image: 'postgres:15.3-alpine3.18'
-#     ports:
-#       - '9111:5432'
-#     environment:
-#       POSTGRES_USER: myapp
-#       POSTGRES_PASSWORD: mypassword
 version: '3.9'
 services:
-  app:
-    platform: 'linux/amd64'
-    build:
-      context: .
-      dockerfile: Dockerfile
-      network: host
-      args:
-        NEXT_PUBLIC_CLIENTVAR: 'clientvar'
-        DATABASE_URL: 'postgresql://myapp:mypassword@localhost:9101/next-trpc-flower-market-management?schema=public'
-        NEXTAUTH_SECRET: 'p0I0oiZgFGhha0eQKzumB5Awyeqe4hQ2jmaQ4t/HuMk='
-        NEXTAUTH_URL: 'http://localhost:3000'
-        NEXT_PUBLIC_AES_KEY: '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'
-        NEXT_PUBLIC_AES_IV: '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'
-    working_dir: /app
-    ports:
-      - '3000:3000'
-    image: flower-market-management
-    environment:
-      DATABASE_URL: 'postgresql://myapp:mypassword@db:5432/next-trpc-flower-market-management?schema=public'
-      NEXTAUTH_SECRET: p0I0oiZgFGhha0eQKzumB5Awyeqe4hQ2jmaQ4t/HuMk=
-      NEXTAUTH_URL: 'http://localhost:3000'
-      NEXT_PUBLIC_AES_KEY: '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'
-      NEXT_PUBLIC_AES_IV: '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'
-    depends_on:
-      - db
   db:
-    image: 'postgres:15.2-alpine3.17'
+    image: 'postgres:15.3-alpine3.18'
     ports:
-      - '9101:5432'
+      - '9111:5432'
     environment:
       POSTGRES_USER: myapp
       POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: next-trpc-flower-market-management
+# version: '3.9'
+# services:
+#   app:
+#     platform: 'linux/amd64'
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#       network: host
+#       args:
+#         NEXT_PUBLIC_CLIENTVAR: 'clientvar'
+#         DATABASE_URL: 'postgresql://myapp:mypassword@localhost:9101/next-trpc-flower-market-management?schema=public'
+#         NEXTAUTH_SECRET: 'p0I0oiZgFGhha0eQKzumB5Awyeqe4hQ2jmaQ4t/HuMk='
+#         NEXTAUTH_URL: 'http://localhost:3000'
+#         NEXT_PUBLIC_AES_KEY: '4wF6BLt9AzdtqvDAplpANZsaomS8HPVfg0YEIs+3JJk='
+#         NEXT_PUBLIC_AES_IV: 'vEM1ubmKbc+8ScqO/d7PnBjjaVoMRdpprL1Fi0KvcEY='
+#     working_dir: /app
+#     ports:
+#       - '3000:3000'
+#     image: flower-market-management
+#     environment:
+#       DATABASE_URL: 'postgresql://myapp:mypassword@db:5432/next-trpc-flower-market-management?schema=public'
+#       NEXTAUTH_SECRET: p0I0oiZgFGhha0eQKzumB5Awyeqe4hQ2jmaQ4t/HuMk=
+#       NEXTAUTH_URL: 'http://localhost:3000'
+#       NEXT_PUBLIC_AES_KEY: '4wF6BLt9AzdtqvDAplpANZsaomS8HPVfg0YEIs+3JJk='
+#       NEXT_PUBLIC_AES_IV: 'vEM1ubmKbc+8ScqO/d7PnBjjaVoMRdpprL1Fi0KvcEY='
+#     depends_on:
+#       - db
+#   db:
+#     image: 'postgres:15.2-alpine3.17'
+#     ports:
+#       - '9101:5432'
+#     environment:
+#       POSTGRES_USER: myapp
+#       POSTGRES_PASSWORD: mypassword
+#       POSTGRES_DB: next-trpc-flower-market-management

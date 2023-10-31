@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDebounce } from '@/utils/hooks/useDebounce';
 import { makeSlug } from '../helpers/slug';
+import { getImagePath } from '@/features/shared/helpers/upload';
 
 const AddShopItem = () => {
   const router = useRouter();
@@ -53,7 +54,7 @@ const AddShopItem = () => {
           <FlowerUploader
             defaultImage={'/assets/images/avatar.png'}
             onImageChanged={(image) => {
-              setValue('image', '/uploads/' + image, { shouldValidate: true });
+              setValue('image', getImagePath(image), { shouldValidate: true });
             }}
             error={errors.image?.message}
           ></FlowerUploader>

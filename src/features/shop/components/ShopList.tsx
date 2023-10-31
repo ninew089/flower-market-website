@@ -1,4 +1,5 @@
 import MarketItem from '@/features/market/components/MarketItem';
+import { getImagePath } from '@/features/shared/helpers/upload';
 import Button from '@/features/ui/components/Button';
 import Loading from '@/features/ui/components/Loading';
 import { api } from '@/utils/api';
@@ -52,7 +53,7 @@ const ShopList = () => {
           {dataShop.shopInfo?.image && (
             <Image
               priority
-              src={`/uploads/${aesDecrypt(dataShop.shopInfo.image)}`}
+              src={`${getImagePath(aesDecrypt(dataShop.shopInfo.image))}`}
               alt="logo"
               width={50}
               height={50}

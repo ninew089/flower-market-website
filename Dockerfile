@@ -44,13 +44,17 @@ RUN \
 
 FROM --platform=linux/amd64 node:16-alpine3.16 AS runner
 WORKDIR /app
-
 ENV NODE_ENV production
+
+
+
 
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+
 
 COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public

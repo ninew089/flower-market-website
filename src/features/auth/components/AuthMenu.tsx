@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import {
   ChevronDownIcon,
   ShoppingCartIcon,
+  UserGroupIcon,
   Bars3BottomLeftIcon,
   PencilSquareIcon as PencilSquareSolidIcon,
   ArrowLeftOnRectangleIcon as ArrowLeftOnRectangleSolidIcon,
@@ -18,6 +19,8 @@ import {
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { getImagePath } from '@/features/shared/helpers/upload';
+import ProtectedResource from '../guard/ProtectedResource';
 
 export default function AuthMenu() {
   const { data: session, status } = useSession();
@@ -31,7 +34,7 @@ export default function AuthMenu() {
               priority
               src={
                 session?.user.image
-                  ? '/uploads/' + session?.user.image
+                  ? getImagePath(session?.user.image)
                   : '/assets/images/avatar.png'
               }
               alt={session?.user.name ?? 'Member'}
@@ -58,6 +61,26 @@ export default function AuthMenu() {
             <div className="px-1 py-1 ">
               {status === 'authenticated' && (
                 <>
+                  <ProtectedResource roles={['ADMIN']}>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          href={`/admin`}
+                          className={`${
+                            active
+                              ? 'bg-pink-50 text-pink-500'
+                              : 'text-gray-900'
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                          <UserGroupIcon
+                            className="mr-2 h-5 w-5"
+                            aria-hidden="true"
+                          />
+                          See Membership
+                        </Link>
+                      )}
+                    </Menu.Item>
+                  </ProtectedResource>
                   <Menu.Item>
                     {({ active }) => (
                       <Link

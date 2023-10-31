@@ -1,18 +1,18 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
-import formidable from "formidable";
+import { type NextApiRequest, type NextApiResponse } from 'next';
+import formidable from 'formidable';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   return new Promise<void>((resolve) => {
-    if (req.method !== "POST") {
-      res.status(405).send({ error: "method not allowed." });
+    if (req.method !== 'POST') {
+      res.status(405).send({ error: 'method not allowed.' });
       resolve();
     }
 
     const form = formidable({
-      uploadDir: "./public/uploads",
+      uploadDir: './public/uploads',
       keepExtensions: true,
     });
 
@@ -25,7 +25,6 @@ export default async function handler(
         resolve();
       } else {
         const sendFile = Array.isArray(file)
-       
           ? (file[0] as formidable.File)
           : file;
         res.status(200).json({ filename: sendFile.newFilename });
