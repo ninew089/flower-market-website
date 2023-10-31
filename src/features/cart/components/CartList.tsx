@@ -13,7 +13,20 @@ const CartList = () => {
   const setUiToast = useAppStore((state) => state.setUiToast);
   const router = useRouter();
   const total = useMemo(() => getTotal(), [getTotal, cartList]);
-  const { mutateAsync, isLoading } = api.item.buy.useMutation();
+  const { mutateAsync: buy, isLoading } = api.item.buy.useMutation({
+    onSuccess() {
+      clearAll();
+      setUiToast({
+        type: 'Success',
+        message: `We've confirmed your payment. Thank you for shopping with us`,
+      });
+      router.push(`/market`);
+    },
+    onError({ message }) {
+      setUiToast({ type: 'Error', message });
+    },
+  });
+
   const listIdCart = cartList.map((x) => x.id);
   const { data: listStock } = api.item.findStockList.useQuery(listIdCart);
 
@@ -24,13 +37,7 @@ const CartList = () => {
     }));
 
     if (cartItem.length > 0) {
-      await mutateAsync(cartItem);
-      clearAll();
-      setUiToast({
-        type: 'Success',
-        message: `We've confirmed your payment. Thank you for shopping with us`,
-      });
-      router.push(`/market`);
+      await buy(cartItem);
     }
   };
 

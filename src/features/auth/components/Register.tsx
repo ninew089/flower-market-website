@@ -8,7 +8,7 @@ import { useAppStore } from '@/features/store';
 const Register = () => {
   const router = useRouter();
   const setUiToast = useAppStore((state) => state.setUiToast);
-  const { mutate: register } = api.auth.register.useMutation({
+  const { mutateAsync: register } = api.auth.register.useMutation({
     onSuccess() {
       router.replace('/auth/sign-in');
     },
@@ -16,8 +16,8 @@ const Register = () => {
       setUiToast({ type: 'Error', message });
     },
   });
-  const submit = (credentials: RegisterInput) => {
-    register({
+  const submit = async (credentials: RegisterInput) => {
+    await register({
       ...credentials,
       citizenId: aesEncrypt(credentials.citizenId),
       tel: aesEncrypt(credentials.tel),

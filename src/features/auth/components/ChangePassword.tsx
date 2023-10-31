@@ -13,7 +13,18 @@ const ChangePassword = () => {
   const router = useRouter();
   const { update: updateSession } = useSession();
   const setUiToast = useAppStore((state) => state.setUiToast);
-  const { mutateAsync: update } = api.auth.update.useMutation();
+  const { mutateAsync: update } = api.auth.update.useMutation({
+    onSuccess() {
+      setUiToast({
+        type: 'Success',
+        message: 'Success,Change your password.',
+      });
+      void router.push('/market');
+    },
+    onError({ message }) {
+      setUiToast({ type: 'Error', message });
+    },
+  });
   const {
     handleSubmit,
     register,
@@ -30,11 +41,6 @@ const ChangePassword = () => {
     await updateSession({
       ...changePassword,
     });
-    setUiToast({
-      type: 'Success',
-      message: 'Success,Change your password.',
-    });
-    void router.push('/market');
   };
 
   return (

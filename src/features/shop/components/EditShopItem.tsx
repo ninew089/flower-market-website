@@ -11,11 +11,23 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Loading from '@/features/ui/components/Loading';
 import { getImagePath } from '@/features/shared/helpers/upload';
+import { useAppStore } from '@/features/store';
 
 const EditShopItem = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const { mutateAsync: update, isSuccess } = api.item.update.useMutation();
+  const setUiToast = useAppStore((state) => state.setUiToast);
+
+  const { mutateAsync: update } = api.item.update.useMutation({
+    onSuccess() {
+      setUiToast({ type: 'Success', message: 'Success,Updated Flower' });
+      void router.push(`/shop/${session?.user.id}`);
+    },
+    onError({ message }) {
+      setUiToast({ type: 'Error', message });
+    },
+  });
+
   const itemId = router.query.itemId as string;
   const { data: item, isLoading } = api.item.byId.useQuery(+itemId);
   const {
@@ -52,12 +64,6 @@ const EditShopItem = () => {
       );
     }
   }, [item]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      router.push(`/shop/${session?.user.id}`);
-    }
-  }, [isSuccess]);
 
   if (isLoading) return <Loading></Loading>;
 

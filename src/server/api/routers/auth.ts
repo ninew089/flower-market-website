@@ -10,6 +10,26 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const hashedPassword = await bcrypt.hash(input.password, 12);
       const citizenId = await aesDecrypt(input.citizenId);
+      const isnotExsting = await ctx.db.user.findMany({
+        where: {
+          OR: [
+            {
+              email: input.email,
+            },
+            {
+              citizenId: citizenId,
+            },
+          ],
+        },
+      });
+
+      if (isnotExsting?.length > 0) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This email or citizen ID already registered',
+        });
+      }
+
       const user = await ctx.db.user.create({
         data: {
           ...input,

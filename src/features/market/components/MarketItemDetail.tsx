@@ -18,13 +18,13 @@ const MarketItemDetail = () => {
   const slug = router.query.slug as string;
   const { data } = useSession();
   const { data: item, isLoading } = api.item.bySlug.useQuery(slug);
-  const { mutate } = api.item.view.useMutation();
+  const { mutateAsync: updateView } = api.item.view.useMutation();
   const addItem = useAppStore((state) => state.addItem);
   const setUiToast = useAppStore((state) => state.setUiToast);
 
   useEffect(() => {
     if (typeof item !== 'undefined' && item !== null) {
-      mutate(item.id);
+      updateView(item.id);
     }
   }, [item]);
 

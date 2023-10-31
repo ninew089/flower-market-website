@@ -12,11 +12,23 @@ import { useEffect } from 'react';
 import { useDebounce } from '@/utils/hooks/useDebounce';
 import { getImagePath } from '@/features/shared/helpers/upload';
 import { slugify } from '@/features/shared/helpers/slugify';
+import { useAppStore } from '@/features/store';
 
 const AddShopItem = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const { mutateAsync: add, isSuccess } = api.item.add.useMutation();
+  const setUiToast = useAppStore((state) => state.setUiToast);
+
+  const { mutateAsync: add } = api.item.add.useMutation({
+    onSuccess() {
+      setUiToast({ type: 'Success', message: 'Success,Add Flower' });
+      router.push(`/shop/${session?.user.id}`);
+    },
+    onError({ message }) {
+      setUiToast({ type: 'Error', message });
+    },
+  });
+
   const {
     handleSubmit,
     register,
@@ -30,15 +42,10 @@ const AddShopItem = () => {
 
   const productName = watch('productName');
   const debouncedValue = useDebounce<string>(productName, 500);
-  const updateProfile: SubmitHandler<ShopItemInput> = async (shopItem) => {
+
+  const updateFlowerItem: SubmitHandler<ShopItemInput> = async (shopItem) => {
     add({ ...shopItem, available: 'true' });
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      router.push(`/shop/${session?.user.id}`);
-    }
-  }, [isSuccess]);
 
   useEffect(() => {
     if (typeof debouncedValue !== 'undefined') {
@@ -49,7 +56,7 @@ const AddShopItem = () => {
   return (
     <div className="mx-auto max-w-lg px-5">
       <p className="text-xl pl-5 font-medium mb-10">Add Your Flower</p>
-      <form onSubmit={handleSubmit(updateProfile)}>
+      <form onSubmit={handleSubmit(updateFlowerItem)}>
         <div className="center mx-auto py-3">
           <FlowerUploader
             defaultImage={'/assets/images/avatar.png'}

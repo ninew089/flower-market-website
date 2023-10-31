@@ -19,7 +19,19 @@ const Profile = () => {
   const router = useRouter();
   const { data: session, update: updateSession } = useSession();
   const setUiToast = useAppStore((state) => state.setUiToast);
-  const { mutateAsync: update } = api.auth.update.useMutation();
+  const { mutateAsync: update } = api.auth.update.useMutation({
+    onSuccess() {
+      setUiToast({
+        type: 'Success',
+        message: 'Your profile has already updated.',
+      });
+      void router.push('/market');
+    },
+    onError({ message }) {
+      setUiToast({ type: 'Error', message });
+    },
+  });
+
   const {
     handleSubmit,
     register,
@@ -39,11 +51,6 @@ const Profile = () => {
       ...profile,
       tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
     });
-    setUiToast({
-      type: 'Success',
-      message: 'Your profile has already updated.',
-    });
-    void router.push('/market');
   };
 
   useEffect(() => {
