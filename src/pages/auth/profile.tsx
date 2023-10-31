@@ -1,16 +1,18 @@
 import Profile from '@/features/auth/components/Profile';
-import { NextPageWithLayout } from '../_app';
-import Layout from '@/features/ui/components/layouts/Normal';
 import ProtectedRoute from '@/features/auth/guard/ProtectedRote';
+import Layout from '@/features/ui/components/layouts/Normal';
+import { ReactNode } from 'react';
 
-const ProfilePage: NextPageWithLayout = () => {
+const ProfilePage = () => {
+  return <Profile></Profile>;
+};
+
+ProfilePage.getLayout = ({ children }: { children: ReactNode }) => {
   return (
     <ProtectedRoute>
-      <Profile></Profile>
+      <Layout>{children}</Layout>
     </ProtectedRoute>
   );
 };
-
-ProfilePage.getLayout = Layout;
 
 export default ProfilePage;

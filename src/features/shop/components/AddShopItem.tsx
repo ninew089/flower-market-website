@@ -10,8 +10,8 @@ import { api } from '@/utils/api';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDebounce } from '@/utils/hooks/useDebounce';
-import { makeSlug } from '../helpers/slug';
 import { getImagePath } from '@/features/shared/helpers/upload';
+import { slugify } from '@/features/shared/helpers/slugify';
 
 const AddShopItem = () => {
   const router = useRouter();
@@ -42,7 +42,7 @@ const AddShopItem = () => {
 
   useEffect(() => {
     if (typeof debouncedValue !== 'undefined') {
-      setValue('slug', makeSlug(debouncedValue));
+      setValue('slug', slugify(debouncedValue));
     }
   }, [debouncedValue]);
 

@@ -31,26 +31,19 @@ const Profile = () => {
   });
 
   const updateProfile: SubmitHandler<ProfileInput> = async (profile) => {
-    try {
-      await update({
-        ...profile,
-        tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
-      });
-      await updateSession({
-        ...profile,
-        tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
-      });
-      setUiToast({
-        type: 'Success',
-        message: 'Your profile has already updated.',
-      });
-      router.push('/market');
-    } catch (error) {
-      setUiToast({
-        type: 'Error',
-        message: 'Failed update profile',
-      });
-    }
+    await update({
+      ...profile,
+      tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
+    });
+    await updateSession({
+      ...profile,
+      tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
+    });
+    setUiToast({
+      type: 'Success',
+      message: 'Your profile has already updated.',
+    });
+    void router.push('/market');
   };
 
   useEffect(() => {

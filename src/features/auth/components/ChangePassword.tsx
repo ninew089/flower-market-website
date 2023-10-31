@@ -24,24 +24,17 @@ const ChangePassword = () => {
   });
 
   const updatePassword: SubmitHandler<ChangeInput> = async (changePassword) => {
-    try {
-      await update({
-        ...changePassword,
-      });
-      await updateSession({
-        ...changePassword,
-      });
-      setUiToast({
-        type: 'Success',
-        message: 'Success,Change your password.',
-      });
-      router.push('/market');
-    } catch (error) {
-      setUiToast({
-        type: 'Error',
-        message: 'Failed update profile',
-      });
-    }
+    await update({
+      ...changePassword,
+    });
+    await updateSession({
+      ...changePassword,
+    });
+    setUiToast({
+      type: 'Success',
+      message: 'Success,Change your password.',
+    });
+    void router.push('/market');
   };
 
   return (

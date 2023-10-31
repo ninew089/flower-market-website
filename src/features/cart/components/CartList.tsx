@@ -15,29 +15,22 @@ const CartList = () => {
   const total = useMemo(() => getTotal(), [getTotal, cartList]);
   const { mutateAsync, isLoading } = api.item.buy.useMutation();
   const listIdCart = cartList.map((x) => x.id);
-  const { data: listStock, isLoading: isLoadStock } =
-    api.item.findStockList.useQuery(listIdCart);
+  const { data: listStock } = api.item.findStockList.useQuery(listIdCart);
 
   const onBuy = async () => {
     const cartItem = cartList.map((item) => ({
       id: item.id,
       total: item.quantity,
     }));
-    try {
-      if (cartItem.length > 0) {
-        await mutateAsync(cartItem);
-        clearAll();
-        setUiToast({
-          type: 'Success',
-          message: `We've confirmed your payment. Thank you for shopping with us`,
-        });
-        router.push(`/market`);
-      }
-    } catch (error: any) {
+
+    if (cartItem.length > 0) {
+      await mutateAsync(cartItem);
+      clearAll();
       setUiToast({
-        type: 'Error',
-        message: error?.message ?? 'Some thing went wrong',
+        type: 'Success',
+        message: `We've confirmed your payment. Thank you for shopping with us`,
       });
+      router.push(`/market`);
     }
   };
 

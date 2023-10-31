@@ -1,16 +1,18 @@
-import { NextPageWithLayout } from '../_app';
 import Layout from '@/features/ui/components/layouts/Normal';
 import ProtectedRoute from '@/features/auth/guard/ProtectedRote';
 import ChangePassword from '@/features/auth/components/ChangePassword';
+import { ReactNode } from 'react';
 
-const ChangePasswordPage: NextPageWithLayout = () => {
+const ChangePasswordPage = () => {
+  return <ChangePassword></ChangePassword>;
+};
+
+ChangePasswordPage.getLayout = ({ children }: { children: ReactNode }) => {
   return (
     <ProtectedRoute>
-      <ChangePassword></ChangePassword>
+      <Layout>{children}</Layout>
     </ProtectedRoute>
   );
 };
-
-ChangePasswordPage.getLayout = Layout;
 
 export default ChangePasswordPage;

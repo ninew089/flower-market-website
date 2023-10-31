@@ -271,7 +271,7 @@ export const itemRouter = createTRPCRouter({
           where: { id: input[i]?.id },
         });
         if (item === null || typeof input[i] === 'undefined') {
-          throw new TRPCError({ code: 'FORBIDDEN' });
+          throw new TRPCError({ code: 'NOT_FOUND' });
         }
         if (
           typeof input[i]?.total === 'number' &&
