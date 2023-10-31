@@ -17,7 +17,6 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),
-    AUTH_SECRET: z.string(),
 
     NEXTAUTH_URL: z.preprocess(
       // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
@@ -47,7 +46,6 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    AUTH_SECRET: process.env.AUTH_SECRET,
     NEXT_PUBLIC_AES_KEY: process.env.NEXT_PUBLIC_AES_KEY,
     NEXT_PUBLIC_AES_IV: process.env.NEXT_PUBLIC_AES_KEY,
   },

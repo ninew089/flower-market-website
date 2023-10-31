@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('ADMIN', 'MANAGER', 'MEMBER');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'MEMBER');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -20,7 +20,7 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Item" (
     "id" SERIAL NOT NULL,
-    "title" TEXT NOT NULL,
+    "productName" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "excerpt" TEXT NOT NULL,
     "content" TEXT NOT NULL,

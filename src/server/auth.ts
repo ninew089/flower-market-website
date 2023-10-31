@@ -59,7 +59,6 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.AUTH_SECRET,
   callbacks: {
     jwt({ token, user, session, trigger }) {
       if (trigger === 'update' && isUpdateSessionData(session)) {

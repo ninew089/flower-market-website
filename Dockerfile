@@ -25,6 +25,8 @@ ARG DATABASE_URL
 ARG NEXT_PUBLIC_CLIENTVAR
 ARG NEXTAUTH_SECRET
 ARG NEXTAUTH_URL
+ARG NEXT_PUBLIC_AES_KEY
+ARG NEXT_PUBLIC_AES_IV
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -34,7 +36,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN \
  if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn db:deploy && yarn build; \
  elif [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run db:deploy && npm run build; \
- elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && SKIP_ENV_VALIDATION=1 pnpm run db:deploy && pnpm run build; \
+ elif [ -f yarn-lock.yaml ]; then SKIP_ENV_VALIDATION=1 yarn db:deploy && yarn build; \
  else echo "Lockfile not found." && exit 1; \
  fi
 
