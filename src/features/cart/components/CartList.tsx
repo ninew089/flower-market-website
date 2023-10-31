@@ -5,13 +5,15 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { api } from '@/utils/api';
 import { useMemo } from 'react';
+import { ChevronLeftIcon } from '@heroicons/react/24/solid';
 
 const CartList = () => {
+  const router = useRouter();
   const cartList = useAppStore((state) => state.items);
   const getTotal = useAppStore((state) => state.getTotal);
   const clearAll = useAppStore((state) => state.clearAll);
   const setUiToast = useAppStore((state) => state.setUiToast);
-  const router = useRouter();
+
   const total = useMemo(() => getTotal(), [getTotal, cartList]);
   const { mutateAsync: buy, isLoading } = api.item.buy.useMutation({
     onSuccess() {
@@ -43,7 +45,14 @@ const CartList = () => {
 
   return (
     <div className="mx-auto max-w-7xl px-5">
-      <p className="text-xl pl-5 font-medium mb-10"> My Cart</p>
+      <div
+        className="flex gap-x-1 items-center cursor-pointer"
+        onClick={() => router.back()}
+      >
+        <ChevronLeftIcon width={24} />
+        Back
+      </div>
+      <p className="text-xl pl-5 font-medium my-10"> My Cart</p>
       <div className="flex flex-col gap-y-6">
         {cartList.map((item, index) => (
           <CartItem

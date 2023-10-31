@@ -20,6 +20,7 @@ const MarketItemDetail = () => {
   const { data: item, isLoading } = api.item.bySlug.useQuery(slug);
   const { mutateAsync: updateView } = api.item.view.useMutation();
   const addItem = useAppStore((state) => state.addItem);
+  const cartItems = useAppStore((state) => state.items);
   const setUiToast = useAppStore((state) => state.setUiToast);
 
   useEffect(() => {
@@ -32,17 +33,30 @@ const MarketItemDetail = () => {
   if (!item || typeof slug === 'undefined') return <div>Not found.</div>;
 
   const onBuyItem = () => {
-    addItem({
-      id: item.id,
-      name: item.productName,
-      price: item.price,
-      image: item.image,
-      quantity: 1,
-    });
-    setUiToast({
-      type: 'Success',
-      message: `Product added to cart successfully`,
-    });
+    const cartItem = cartItems.find((x) => x.id === item.id);
+    if (
+      typeof cartItem?.quantity === 'undefined' ||
+      cartItem.quantity < item.stock
+    ) {
+      addItem({
+        id: item.id,
+        name: item.productName,
+        price: item.price,
+        image: item.image,
+        quantity: 1,
+      });
+
+      setUiToast({
+        type: 'Success',
+        message: `Product added to cart successfully`,
+      });
+      router.push('/cart');
+    } else {
+      setUiToast({
+        type: 'Error',
+        message: `Unable to add products`,
+      });
+    }
   };
 
   return (
@@ -53,14 +67,7 @@ const MarketItemDetail = () => {
       </Link>
       <div className="mt-10 relarive">
         {!item.available && <Badge color="danger">Sold Out</Badge>}
-        {data?.user.id && (
-          <Link
-            href={`/shop/${data.user.id}/${item.id}/edit`}
-            className="bg-pink-100 p-1 rounded-full absolute top-0 right-4 z-10"
-          >
-            <PencilIcon width={16} className="text-pink-500" />
-          </Link>
-        )}
+
         <Image
           priority
           src={item.image}
@@ -80,10 +87,19 @@ const MarketItemDetail = () => {
           sold {item.sold} items
         </div>
       </div>
-
-      <p className="mt-4 text-lg font-medium line-clamp-2  text-pink-500">
-        {item.productName}
-      </p>
+      <div className="mt-4 flex items-center gap-x-2">
+        <p className="text-lg font-medium line-clamp-2  text-pink-500">
+          {item.productName}
+        </p>
+        {data?.user.id === item.userId.toString() && (
+          <Link
+            href={`/shop/${data.user.id}/${item.id}/edit`}
+            className="bg-pink-100 p-1 rounded-full w-6 h-6"
+          >
+            <PencilIcon width={16} className="text-pink-500" />
+          </Link>
+        )}
+      </div>
       <p className="text-sm font-medium line-clamp-2 ">{item.content}</p>
       <p className="text-right font-medium mb-10 mt-2">
         post by{' '}
