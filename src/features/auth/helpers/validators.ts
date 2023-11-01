@@ -78,6 +78,7 @@ export const profile = (isAPI: boolean) =>
               message:
                 'The password must include uppercase and lowercase letters, numbers, and symbols',
             })
+
             .optional(),
         ),
         tel: isAPI ? z.string() : tel,

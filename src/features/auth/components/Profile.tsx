@@ -45,6 +45,7 @@ const Profile = () => {
   const updateProfile: SubmitHandler<ProfileInput> = async (profile) => {
     await update({
       ...profile,
+
       tel: profile.tel ? aesEncrypt(profile.tel) : undefined,
     });
     await updateSession({

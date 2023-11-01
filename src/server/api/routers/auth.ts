@@ -8,7 +8,8 @@ export const authRouter = createTRPCRouter({
   register: publicProcedure
     .input(validators.register(true))
     .mutation(async ({ input, ctx }) => {
-      const hashedPassword = await bcrypt.hash(input.password, 12);
+      console.log(aesDecrypt(input.password));
+      const hashedPassword = await bcrypt.hash(aesDecrypt(input.password), 12);
       const citizenId = await aesDecrypt(input.citizenId);
       const availableInfo = await ctx.db.user.findMany({
         where: {
@@ -61,7 +62,9 @@ export const authRouter = createTRPCRouter({
           data: {
             ...data,
             image: image ? await aesEncrypt(image) : undefined,
-            password: password ? await bcrypt.hash(password, 12) : undefined,
+            password: password
+              ? await bcrypt.hash(aesDecrypt(password), 12)
+              : undefined,
           },
           select: {
             id: true,

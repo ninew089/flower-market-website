@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import * as validators from '../helpers/validators';
 import { type ChangeInput } from '../types';
+import { aesEncrypt } from '@/utils/encrypt';
 
 const ChangePassword = () => {
   const router = useRouter();
@@ -37,9 +38,12 @@ const ChangePassword = () => {
   const updatePassword: SubmitHandler<ChangeInput> = async (changePassword) => {
     await update({
       ...changePassword,
+      password: aesEncrypt(changePassword.password),
     });
     await updateSession({
       ...changePassword,
+      password: aesEncrypt(changePassword.password),
+      confirmPassword: aesEncrypt(changePassword.confirmPassword),
     });
   };
 

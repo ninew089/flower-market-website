@@ -19,6 +19,7 @@ const Register = () => {
   const submit = async (credentials: RegisterInput) => {
     await register({
       ...credentials,
+      password: aesEncrypt(credentials.password),
       citizenId: aesEncrypt(credentials.citizenId),
       tel: aesEncrypt(credentials.tel),
     });

@@ -119,7 +119,13 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) return null;
         if (!credentials?.password) return null;
-        if (!(await bcrypt.compare(credentials.password, user.password))) {
+
+        if (
+          !(await bcrypt.compare(
+            aesDecrypt(credentials.password),
+            user.password,
+          ))
+        ) {
           return null;
         }
 
