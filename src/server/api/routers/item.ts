@@ -283,6 +283,7 @@ export const itemRouter = createTRPCRouter({
           });
         }
       }
+      const saleTime = new Date();
       //update
       for (let i = 0; i < input.length; i++) {
         if (typeof input[i] === 'undefined') return;
@@ -300,6 +301,7 @@ export const itemRouter = createTRPCRouter({
             quantity: input[i]?.total ?? 0,
             price: (input[i]?.total ?? 0) * item.price,
             customerId: +ctx.session.user.id,
+            saleTime: saleTime,
           },
         });
 
