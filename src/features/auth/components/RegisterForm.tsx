@@ -50,6 +50,14 @@ const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
           error={errors.tel?.message}
           {...register('tel')}
         />
+        <FormField
+          id="address"
+          type="address"
+          label="Address"
+          placeholder="Enter your Address"
+          error={errors.address?.message}
+          {...register('address')}
+        />
       </div>
       <div className="flex flex-col gap-y-3 p-4 border shadow-black/50 rounded-xl">
         <p className="text-xl font-medium">Create Account</p>

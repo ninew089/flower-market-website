@@ -262,7 +262,7 @@ export const itemRouter = createTRPCRouter({
         where: { id: input },
       });
     }),
-  buy: publicProcedure
+  buy: protectedProcedure
     .input(z.array(z.object({ id: z.number(), total: z.number() })))
     .mutation(async ({ input, ctx }) => {
       //check stock
@@ -299,6 +299,7 @@ export const itemRouter = createTRPCRouter({
             userId: +item.userId,
             quantity: input[i]?.total ?? 0,
             price: (input[i]?.total ?? 0) * item.price,
+            customerId: +ctx.session.user.id,
           },
         });
 

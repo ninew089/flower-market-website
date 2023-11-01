@@ -1,6 +1,52 @@
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc';
 
 export const saleRouter = createTRPCRouter({
+  orderById: protectedProcedure.query(async ({ input, ctx }) => {
+    const sales = await ctx.db.sale.findMany({
+      where: {
+        userId: +ctx.session.user.id,
+      },
+      orderBy: {
+        saleTime: 'asc',
+      },
+    });
+    return sales;
+  }),
+  orderBySeller: protectedProcedure.query(async ({ input, ctx }) => {
+    const sales = await ctx.db.sale.findMany({
+      where: {
+        userId: +ctx.session.user.id,
+      },
+      orderBy: {
+        saleTime: 'asc',
+      },
+    });
+    const customerId = sales.map((x) => x.customerId);
+    const customer = await ctx.db.user.findMany({
+      where: {
+        id: { in: customerId },
+      },
+      select: {
+        id: true,
+        name: true,
+        tel: true,
+        address: true,
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+    const order = sales.map((x) => {
+      const customerInfo = customer.find((c) => c?.id === x.customerId);
+      return {
+        ...x,
+        customerName: customerInfo?.name,
+        tel: customerInfo?.tel,
+        address: customerInfo?.address,
+      };
+    });
+    return order;
+  }),
   byUserId: protectedProcedure.query(async ({ input, ctx }) => {
     const startDate = new Date();
     startDate.setHours(0, 0, 0, 0);

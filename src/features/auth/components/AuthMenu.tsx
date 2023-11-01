@@ -3,14 +3,14 @@ import { Fragment } from 'react';
 import {
   ChevronDownIcon,
   ShoppingCartIcon,
+  ListBulletIcon,
   UserGroupIcon,
+  ShoppingBagIcon,
   Bars3BottomLeftIcon,
   PencilSquareIcon as PencilSquareSolidIcon,
   ArrowLeftOnRectangleIcon as ArrowLeftOnRectangleSolidIcon,
   ArrowRightOnRectangleIcon as ArrowRightOnRectangleSolidIcon,
   UserPlusIcon as UserPlusSolidIcon,
-} from '@heroicons/react/24/solid';
-import {
   PencilSquareIcon as PencilSquareOutlineIcon,
   ArrowLeftOnRectangleIcon as ArrowLeftOnRectangleOutlineIcon,
   ArrowRightOnRectangleIcon as ArrowRightOnRectangleOutlineIcon,
@@ -94,6 +94,38 @@ export default function AuthMenu() {
                           aria-hidden="true"
                         />
                         My Shop
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href={`/shop/${session.user.id}/customerOrder`}
+                        className={`${
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        <ListBulletIcon
+                          className="mr-2 h-5 w-5"
+                          aria-hidden="true"
+                        />
+                        Customer Order
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href={`/order`}
+                        className={`${
+                          active ? 'bg-pink-50 text-pink-500' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        <ShoppingBagIcon
+                          className="mr-2 h-5 w-5"
+                          aria-hidden="true"
+                        />
+                        My Order
                       </Link>
                     )}
                   </Menu.Item>

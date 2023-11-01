@@ -57,6 +57,9 @@ export const register = (isAPI: boolean) =>
         }),
       citizenId: isAPI ? z.string() : citizenId,
       tel: isAPI ? z.string() : tel,
+      address: z.string().refine((val) => validateInput(val), {
+        message: 'Should not using special characters',
+      }),
     }),
   );
 
@@ -78,6 +81,7 @@ export const profile = (isAPI: boolean) =>
             .optional(),
         ),
         tel: isAPI ? z.string() : tel,
+        address: z.string(),
       }),
     )
     .partial();

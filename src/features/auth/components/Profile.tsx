@@ -57,6 +57,7 @@ const Profile = () => {
     if (session?.user.name) setValue('name', session.user.name);
     if (session?.user.email) setValue('email', session.user.email);
     if (session?.user.tel) setValue('tel', aesDecrypt(session.user.tel));
+    if (session?.user.address) setValue('address', session.user.address);
   }, [session?.user.email, session?.user.name, setValue]);
 
   return (
@@ -98,6 +99,14 @@ const Profile = () => {
           error={errors.name?.message}
           {...register('tel')}
         ></FormField>
+        <FormField
+          id="address"
+          type="address"
+          label="Address"
+          placeholder="Enter your Address"
+          error={errors.address?.message}
+          {...register('address')}
+        />
         <Button
           type="submit"
           align="center"

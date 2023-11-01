@@ -14,6 +14,7 @@ model User {
   email     String   @unique
   image     String?
   password  String
+  address   String
   role      Role     @default(MEMBER)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -48,6 +49,7 @@ model Sale {
   userId   Int
   itemId   Int
   itemName String
+  customerId Int
   quantity Int
   price    Int
   item     Item     @relation(fields: [itemId], references: [id])
