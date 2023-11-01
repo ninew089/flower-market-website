@@ -11,10 +11,6 @@ const OrderTable = () => {
 
   const columns: DataGridColumn<OrderItem>[] = [
     {
-      field: 'id',
-      headerName: 'Order Number',
-    },
-    {
       field: 'createdAt',
       headerName: 'createdAt',
       value: (val) => toDateString(val.createdAt),
