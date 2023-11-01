@@ -42,7 +42,7 @@ const OrderTable = () => {
                 <br />
                 Quantity:&nbsp;{x.quantity}
                 <br />
-                {x.quantity}X{x.item.price / x.quantity}=&nbsp;฿{x.price}
+                {x.quantity}X{x.price / x.quantity}=&nbsp;฿{x.price}
               </div>
             </div>
           ))}
