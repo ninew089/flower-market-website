@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "image" TEXT,
     "password" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'MEMBER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -43,11 +44,21 @@ CREATE TABLE "Sale" (
     "saleTime" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" INTEGER NOT NULL,
     "itemId" INTEGER NOT NULL,
-    "itemName" TEXT NOT NULL,
+    "orderId" INTEGER NOT NULL,
+    "customerId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
     "price" INTEGER NOT NULL,
 
     CONSTRAINT "Sale_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Order" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "shopId" INTEGER NOT NULL,
+
+    CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -67,3 +78,12 @@ ALTER TABLE "Sale" ADD CONSTRAINT "Sale_itemId_fkey" FOREIGN KEY ("itemId") REFE
 
 -- AddForeignKey
 ALTER TABLE "Sale" ADD CONSTRAINT "Sale_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Sale" ADD CONSTRAINT "Sale_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_shopId_fkey" FOREIGN KEY ("shopId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

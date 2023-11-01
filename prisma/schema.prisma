@@ -20,6 +20,8 @@ model User {
   updatedAt DateTime @default(now())
   citizenId String   @unique
   tel       String
+  orderbyUser Order[] @relation("orderbyUser")
+  orderShop Order[] @relation("orderShop")
   items     Item[]
   sale      Sale[]
 }
@@ -48,12 +50,25 @@ model Sale {
   saleTime DateTime @default(now())
   userId   Int
   itemId   Int
-  itemName String
+  orderId  Int
   customerId Int
   quantity Int
   price    Int
   item     Item     @relation(fields: [itemId], references: [id])
   user     User     @relation(fields: [userId], references: [id])
+  order    Order     @relation(fields: [orderId], references: [id])
+
+}
+
+model Order{
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  shopId   Int
+  sale     Sale[]
+  user     User     @relation("orderbyUser",fields: [userId], references: [id])
+  shop     User     @relation("orderShop",fields: [shopId], references: [id])
+  createdAt DateTime @default(now())
+
 }
 
 enum Role {

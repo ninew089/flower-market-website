@@ -37,7 +37,7 @@ export function DataGridItem<T extends DataRow>({
       }
 
       result.push(
-        <td key={col.field as string} className="px-6 py-4">
+        <td key={col.headerName as string} className="px-6 py-4">
           {value}
         </td>,
       );

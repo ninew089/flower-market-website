@@ -5,4 +5,4 @@ import { RouterOutput } from '@/server/api/root';
 export type ShopItemInput = z.infer<typeof shopItems>;
 export type ShopStaticItem =
   RouterOutput['item']['byUserIdWithStatic']['listItems'][number];
-export type CustomerOrder = RouterOutput['sale']['orderBySeller'][number];
+export type CustomerOrder = RouterOutput['order']['orderByShopId'][number];

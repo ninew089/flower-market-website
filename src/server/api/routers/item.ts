@@ -266,6 +266,7 @@ export const itemRouter = createTRPCRouter({
     .input(z.array(z.object({ id: z.number(), total: z.number() })))
     .mutation(async ({ input, ctx }) => {
       //check stock
+      let buyItem = [];
       for (let i = 0; i < input.length; i++) {
         const item = await ctx.db.item.findUnique({
           where: { id: input[i]?.id },
@@ -282,9 +283,24 @@ export const itemRouter = createTRPCRouter({
             message: `Some Product out of stock, Please remove product`,
           });
         }
+        buyItem.push(item);
       }
-      const saleTime = new Date();
-      //update
+      const shopIds = new Set(buyItem.map((x) => x.userId));
+      const _shopIds = Array.from(shopIds);
+
+      let orderShop = {} as { [x: number]: number };
+      let saleTime = new Date();
+      for (let i = 0; i < _shopIds.length; i++) {
+        const order = await ctx.db.order.create({
+          data: {
+            userId: +ctx.session.user.id,
+            shopId: _shopIds[i] ?? 0,
+          },
+        });
+        saleTime = order.createdAt;
+        orderShop[_shopIds[i] ?? 0] = order.id;
+      }
+
       for (let i = 0; i < input.length; i++) {
         if (typeof input[i] === 'undefined') return;
         const item = await ctx.db.item.findUnique({
@@ -296,8 +312,8 @@ export const itemRouter = createTRPCRouter({
         await ctx.db.sale.create({
           data: {
             itemId: +item.id,
-            itemName: item.productName,
             userId: +item.userId,
+            orderId: orderShop[item.userId] ?? 0,
             quantity: input[i]?.total ?? 0,
             price: (input[i]?.total ?? 0) * item.price,
             customerId: +ctx.session.user.id,

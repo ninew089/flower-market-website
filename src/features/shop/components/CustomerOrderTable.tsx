@@ -4,44 +4,64 @@ import { CustomerOrder } from '../types';
 import DataGrid, { DataGridColumn } from '@/features/ui/components/DataGrid';
 import { toDateString } from '@/features/shared/helpers/date';
 import { aesDecrypt } from '@/utils/encrypt';
+import Image from 'next/image';
 
 const CustomerOrderTable = () => {
-  const { data, isLoading } = api.sale.orderBySeller.useQuery();
+  const { data, isLoading } = api.order.orderByShopId.useQuery();
 
   const columns: DataGridColumn<CustomerOrder>[] = [
     {
-      field: 'saleTime',
-      headerName: 'saleTime',
-      value: (val) => toDateString(val.saleTime),
+      field: 'id',
+      headerName: 'orderID',
     },
     {
-      field: 'itemId',
-      headerName: 'itemId',
+      field: 'createdAt',
+      headerName: 'createdAt',
+      value: (val) => toDateString(val.createdAt),
     },
     {
-      field: 'itemName',
-      headerName: 'itemName',
+      field: 'user',
+      headerName: 'Name',
+      value: (val) => val.user.name,
     },
     {
-      field: 'price',
-      headerName: 'price',
-    },
-    {
-      field: 'quantity',
-      headerName: 'quantity',
-    },
-    {
-      field: 'customerName',
-      headerName: 'customerName',
-    },
-    {
-      field: 'tel',
+      field: 'user',
       headerName: 'Tel',
-      value: (val) => `${aesDecrypt(val.tel as string)}`,
+      value: (val) => aesDecrypt(val.user.tel),
     },
     {
-      field: 'address',
-      headerName: 'address',
+      field: 'user',
+      headerName: 'Address',
+      value: (val) => val.user.address,
+    },
+    {
+      field: 'sale',
+      headerName: 'Items',
+      value: (val) => (
+        <div className="flex flex-col gap-y-1">
+          {val.sale.map((x) => (
+            <div key={x.id} className="flex gap-x-2">
+              <Image
+                priority
+                src={aesDecrypt(x.item.image)}
+                alt={x.item.productName}
+                width="0"
+                height="0"
+                sizes="100vw"
+                objectFit="cover"
+                className=" rounded-md object-cover object-center w-8 h-8"
+              />
+              <div>
+                product name:{x.item.productName}
+                <br />
+                quantity:{x.quantity}
+                <br />
+                total:{x.price}
+              </div>
+            </div>
+          ))}
+        </div>
+      ),
     },
   ];
 
