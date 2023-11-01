@@ -11,7 +11,7 @@
 
 .marquee-content {
   display: flex;
-  animation: scrolling 10s linear infinite;
+  animation: scrolling 26s linear infinite;
 }
 
 .marquee-item {
@@ -30,6 +30,6 @@
     transform: translateX(0);
   }
   100% {
-    transform: translatex(-144vw);
+    transform: translatex(-100%);
   }
 }
