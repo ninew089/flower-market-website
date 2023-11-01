@@ -36,23 +36,33 @@ const CustomerOrderTable = () => {
       value: (val) => (
         <div className="flex flex-col gap-y-1">
           {val.sale.map((x) => (
-            <div key={x.id} className="flex gap-x-2">
-              <Image
-                priority
-                src={aesDecrypt(x.item.image)}
-                alt={x.item.productName}
-                width="0"
-                height="0"
-                sizes="100vw"
-                objectFit="cover"
-                className=" rounded-md object-cover object-center w-8 h-8"
-              />
-              <div>
-                product name:{x.item.productName}
-                <br />
-                quantity:{x.quantity}
-                <br />
-                total:{x.price}
+            <div className="flex flex-col gap-y-1">
+              {val.sale.map((x) => (
+                <div key={x.id} className="flex gap-x-2">
+                  <Image
+                    priority
+                    src={aesDecrypt(x.item.image)}
+                    alt={x.item.productName}
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    objectFit="cover"
+                    className=" rounded-md object-cover object-center w-8 h-8"
+                  />
+                  <div className="whitespace-nowrap">
+                    <p className="text-gray-900">{x.item.productName}</p>
+                    <br />
+                    Quantity:&nbsp;{x.quantity}
+                    <br />
+                    {x.quantity}X{x.item.price / x.quantity}=&nbsp;฿{x.price}
+                  </div>
+                </div>
+              ))}
+              <div className="mt-4 text-gray-900">
+                Total:&nbsp;฿
+                {val.sale.reduce((accumulator, currentValue) => {
+                  return accumulator + currentValue.price;
+                }, 0)}
               </div>
             </div>
           ))}

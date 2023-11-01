@@ -37,15 +37,21 @@ const OrderTable = () => {
                 objectFit="cover"
                 className=" rounded-md object-cover object-center w-8 h-8"
               />
-              <div>
-                product name:{x.item.productName}
+              <div className="whitespace-nowrap">
+                <p className="text-gray-900">{x.item.productName}</p>
                 <br />
-                quantity:{x.quantity}
+                Quantity:&nbsp;{x.quantity}
                 <br />
-                total:{x.price}
+                {x.quantity}X{x.item.price / x.quantity}=&nbsp;฿{x.price}
               </div>
             </div>
           ))}
+          <div className="mt-4 text-gray-900">
+            Total:&nbsp;฿
+            {val.sale.reduce((accumulator, currentValue) => {
+              return accumulator + currentValue.price;
+            }, 0)}
+          </div>
         </div>
       ),
     },

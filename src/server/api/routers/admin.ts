@@ -14,6 +14,7 @@ export const adminRoute = createTRPCRouter({
           image: true,
           tel: true,
           email: true,
+          role: true,
         },
         orderBy: {
           id: 'asc',
@@ -38,7 +39,7 @@ export const adminRoute = createTRPCRouter({
       const overview = users.map((x) => ({
         ...x,
         tel: aesDecrypt(x.tel),
-        sale: overviewSale[x.id]?.price,
+        sale: overviewSale[x.id]?.price ?? 0,
       }));
       return overview;
     }),

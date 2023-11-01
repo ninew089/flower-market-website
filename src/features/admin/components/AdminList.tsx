@@ -23,13 +23,17 @@ const AdminList = () => {
           alt={user.name}
           width={40}
           height={40}
-          className="rounded-full w-10 h-10 object-cover"
+          className="rounded-full w-10 h-10 min-w-[40px] object-cover"
         ></Image>
       ),
     },
     {
       field: 'name',
       headerName: 'Name',
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
     },
     {
       field: 'email',
