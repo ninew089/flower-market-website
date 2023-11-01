@@ -27,7 +27,7 @@ const MarketItem = ({
     <Link
       href={`/market/${slug}`}
       className={twMerge(
-        'relative px-4 pt-4 pb-5 flex flex-col w-full shadow-md rounded-xl shadow-black/5',
+        'relative px-4 pt-4 pb-5 flex flex-col w-full shadow-md rounded-xl border-[2px] border-pink-50 shadow-pink-500/5',
         className,
       )}
     >
